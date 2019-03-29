@@ -1,0 +1,12 @@
+[Unit]
+Description=SWUpdate daemon
+Documentation=https://github.com/sbabic/swupdate
+Documentation=https://sbabic.github.io/swupdate
+After=swu-environment.service
+
+[Service]
+EnvironmentFile=/tmp/swupdate.env
+ExecStart=/usr/bin/swupdate -v -w "-r /www" $SWUPDATE_EXTRA_ARGS
+
+[Install]
+WantedBy=multi-user.target

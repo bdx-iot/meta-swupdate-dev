@@ -1,0 +1,108 @@
+From c6be555de4b94d9b588edb70dc264dfefb360803 Mon Sep 17 00:00:00 2001
+From: Joris Offouga <offougajoris@gmail.com>
+Date: Wed, 13 Mar 2019 21:33:07 +0000
+Subject: [PATCH] pico-imx7d: add SWUpdate Requirements
+
+Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+---
+ configs/pico-pi-imx7d_defconfig |  8 ++++++--
+ include/configs/pico-imx7d.h    | 41 ++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 44 insertions(+), 5 deletions(-)
+
+diff --git a/configs/pico-pi-imx7d_defconfig b/configs/pico-pi-imx7d_defconfig
+index 3a182dc..0a5b527 100644
+--- a/configs/pico-pi-imx7d_defconfig
++++ b/configs/pico-pi-imx7d_defconfig
+@@ -14,7 +14,8 @@ CONFIG_IMX_BOOTAUX=y
+ CONFIG_DISTRO_DEFAULTS=y
+ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=arch/arm/mach-imx/spl_sd.cfg"
+-CONFIG_BOOTCOMMAND="run findfdt; run finduuid; run distro_bootcmd"
++CONFIG_USE_BOOTARGS=y
++CONFIG_BOOTARGS="console=${console},${baudrate} root=/dev/mmcblk2p${rootpart} oops=panic panic=5 rw rootwait"
+ CONFIG_DEFAULT_FDT_FILE="imx7d-pico-pi.dtb"
+ CONFIG_SPL_I2C_SUPPORT=y
+ CONFIG_SPL_USB_HOST_SUPPORT=y
+@@ -34,7 +35,10 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_USB_SDP=y
+ CONFIG_CMD_USB_MASS_STORAGE=y
+-# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_SETEXPR=y
++CONFIG_CMD_FS_GENERIC=y
++CONFIG_BOOTCOUNT_LIMIT=y
++CONFIG_BOOTCOUNT_ENV=y
+ # CONFIG_CMD_MII is not set
+ CONFIG_CMD_CACHE=y
+ CONFIG_CMD_EXT4_WRITE=y
+diff --git a/include/configs/pico-imx7d.h b/include/configs/pico-imx7d.h
+index 1884c58..1bec86c 100644
+--- a/include/configs/pico-imx7d.h
++++ b/include/configs/pico-imx7d.h
+@@ -88,7 +88,8 @@
+ 		"name=rootfs,size=0,uuid=${uuid_gpt_rootfs}\0" \
+ 	"fastboot_partition_alias_system=rootfs\0" \
+ 	"setup_emmc=mmc dev 0; gpt write mmc 0 $partitions; reset;\0" \
+-	BOOTENV
++	BOOTENV \
++	SWUPDATE_ENV_SETTINGS
+ 
+ #define BOOT_TARGET_DEVICES(func) \
+ 	func(MMC, mmc, 0) \
+@@ -98,6 +99,39 @@
+ 
+ #include <config_distro_bootcmd.h>
+ 
++#undef CONFIG_BOOTCOMMAND
++#define CONFIG_BOOTCOMMAND	\
++	"setenv bootargs 'console=${console},${baudrate} root=/dev/mmcblk2p'${rootpart}' rootwait rw';" \
++	"run swu_setup; "	\
++	"load mmc 0:${rootpart} 0x83000000 /boot/${fdtfile}; " \
++	"load mmc 0:${rootpart} 0x80800000 /boot/${image}; " \
++	"bootz ${loadaddr} - ${fdt_addr}; "
++ 
++#define SWUPDATE_ENV_SETTINGS \
++	"bootlimit=1\0"	\
++	"bootcount=0\0"	\
++	"upgrade_available=0\0"	\
++	"rootpart=2\0" \
++	\
++	"swu_setup="                                                     \
++	"setenv expand_bootargs \"setenv bootargs \\\\\"${bootargs}\\\\\"\"; "              \
++	"run expand_bootargs; "                                             \
++	"setenv expand_bootargs;\0"                                          \
++	\
++	"swu_altbootcmd="	\
++	"if test ${rootpart} = 2; then " \
++	"echo Bountcount limit reached. Reverting to B; " \
++	"setenv rootpart 3; "	\
++	"else "	\
++	"echo Bountcount limit reached. Reverting to A; " \
++	"setenv rootpart 2; "	\
++	"fi; " \
++	"setenv upgrade_available 0; " \
++	"saveenv\0" \
++	\
++	"altbootcmd=run swu_altbootcmd; " \
++	"run bootcmd\0"
++
+ #define CONFIG_SYS_MEMTEST_START	0x80000000
+ #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
+ 
+@@ -132,10 +166,11 @@
+ #define CONFIG_POWER_PFUZE3000_I2C_ADDR	0x08
+ 
+ /* FLASH and environment organization */
+-#define CONFIG_ENV_SIZE			SZ_8K
++#define CONFIG_ENV_SIZE			SZ_16K
+ 
+ /* Environment starts at 768k = 768 * 1024 = 786432 */
+-#define CONFIG_ENV_OFFSET		786432
++#define CONFIG_ENV_OFFSET		0xC0000
++#define CONFIG_ENV_OFFSET_REDUND        0xE0000
+ /*
+  * Detect overlap between U-Boot image and environment area in build-time
+  *
+-- 
+2.7.4
+

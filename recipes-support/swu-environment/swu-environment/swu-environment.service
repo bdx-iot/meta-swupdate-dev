@@ -1,0 +1,9 @@
+[Unit]
+Description=SWUpdate Environment
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "/usr/bin/swupdate-env"
+
+[Install]
+WantedBy=multi-user.target
