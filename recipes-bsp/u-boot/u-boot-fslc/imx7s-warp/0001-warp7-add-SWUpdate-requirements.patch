@@ -1,35 +1,38 @@
-From ee50911cc57335b208b48ad7fa8ce2df6557990e Mon Sep 17 00:00:00 2001
+From 8bc4007c10ad07d84e5e16582f93123fa6e55886 Mon Sep 17 00:00:00 2001
 From: Pierre-Jean Texier <pjtexier@koncepto.io>
-Date: Sun, 10 Mar 2019 20:50:48 +0100
+Date: Fri, 12 Apr 2019 20:35:23 +0200
 Subject: [PATCH] warp7: add SWUpdate requirements
 
 Signed-off-by: Pierre-Jean Texier <pjtexier@koncepto.io>
 ---
  configs/warp7_defconfig |  2 ++
- include/configs/warp7.h | 28 ++++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ include/configs/warp7.h | 30 +++++++++++++++++++++++++++++-
+ 2 files changed, 31 insertions(+), 1 deletion(-)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index 955c7af..7810423 100644
+index 28aa06f..c19769a 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
-@@ -29,6 +29,8 @@ CONFIG_CMD_EXT4_WRITE=y
- CONFIG_CMD_FAT=y
- CONFIG_CMD_FS_GENERIC=y
+@@ -34,6 +34,8 @@ CONFIG_CMD_FS_GENERIC=y
+ CONFIG_OF_CONTROL=y
+ CONFIG_DEFAULT_DEVICE_TREE="imx7s-warp"
  CONFIG_NET_RANDOM_ETHADDR=y
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
  CONFIG_DFU_MMC=y
- CONFIG_FSL_ESDHC=y
- CONFIG_OPTEE=y
+ CONFIG_DM_GPIO=y
+ CONFIG_DM_I2C=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index a391dfb..0f7ba5e 100644
+index 043f286..8efb797 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
-@@ -41,8 +41,34 @@
- #define CONFIG_DFU_ENV_SETTINGS \
- 	"dfu_alt_info=boot raw 0x2 0x400 mmcpart 1\0" \
+@@ -39,10 +39,36 @@
+ #define CONFIG_SERIAL_TAG
  
+ #define CONFIG_DFU_ENV_SETTINGS \
+-	"dfu_alt_info=boot raw 0x2 0x400 mmcpart 1\0" \
++	"dfu_alt_info=boot raw 0x2 0x1000 mmcpart 1\0" \
++
 +#define SWU_ENV_SETTINGS \
 +	"bootlimit=1\0"	\
 +	"bootcount=0\0"	\
@@ -53,7 +56,7 @@ index a391dfb..0f7ba5e 100644
 +	\
 +	"altbootcmd=run swu_altbootcmd; " \
 +	"run bootcmd\0" \
-+
+ 
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	CONFIG_DFU_ENV_SETTINGS \
 +	SWU_ENV_SETTINGS \
@@ -61,7 +64,7 @@ index a391dfb..0f7ba5e 100644
  	"script=boot.scr\0" \
  	"script_signed=boot.scr.imx-signed\0" \
  	"image=zImage\0" \
-@@ -141,6 +167,8 @@
+@@ -133,6 +159,8 @@
  #define CONFIG_ENV_SIZE			SZ_8K
  
  #define CONFIG_ENV_OFFSET		(8 * SZ_64K)
