@@ -1,6 +1,6 @@
 software =
 {
-	version = "1.0";
+	version = "1.0.0";
 
 	pico-imx7d = {
 		hardware-compatibility: [ "rev1.2"];
