@@ -6,4 +6,4 @@ if [ "$_cur_mmcpart" -eq 2 ]; then
 else
     _partno=A
 fi
-echo "SWUPDATE_EXTRA_ARGS=--select=stable,rootfs${_partno} -H warp7:rev0.2 -f /etc/swupdate.cfg -p 'reboot'" > /tmp/swupdate.env
+echo "SWUPDATE_EXTRA_ARGS=--select=stable,rootfs${_partno} -H warp7:rev0.2 -f /etc/swupdate.cfg" > /tmp/swupdate.env
