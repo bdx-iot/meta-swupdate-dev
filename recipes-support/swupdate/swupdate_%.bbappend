@@ -12,5 +12,5 @@ do_install_append() {
     install -m 644 ${WORKDIR}/swupdate.cfg ${D}${sysconfdir}
 }
 
-SRCREV = "79d1388b7ce1951cecceba48498a3ad662599899"
+SRCREV = "0ca4fdc1c947a7b075256fc12421e31491cba239"
 
