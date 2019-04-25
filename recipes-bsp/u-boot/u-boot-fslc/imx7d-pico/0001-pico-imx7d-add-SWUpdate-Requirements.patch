@@ -1,16 +1,17 @@
-From c6be555de4b94d9b588edb70dc264dfefb360803 Mon Sep 17 00:00:00 2001
+From 0ffdd8d81dd622db465e34d062f87266dd827a4e Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
 Date: Wed, 13 Mar 2019 21:33:07 +0000
 Subject: [PATCH] pico-imx7d: add SWUpdate Requirements
 
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+
 ---
- configs/pico-pi-imx7d_defconfig |  8 ++++++--
- include/configs/pico-imx7d.h    | 41 ++++++++++++++++++++++++++++++++++++++---
+ configs/pico-pi-imx7d_defconfig |  8 +++++--
+ include/configs/pico-imx7d.h    | 41 ++++++++++++++++++++++++++++++---
  2 files changed, 44 insertions(+), 5 deletions(-)
 
 diff --git a/configs/pico-pi-imx7d_defconfig b/configs/pico-pi-imx7d_defconfig
-index 3a182dc..0a5b527 100644
+index c8ac2ffd5f..1542c2e231 100644
 --- a/configs/pico-pi-imx7d_defconfig
 +++ b/configs/pico-pi-imx7d_defconfig
 @@ -14,7 +14,8 @@ CONFIG_IMX_BOOTAUX=y
@@ -21,9 +22,9 @@ index 3a182dc..0a5b527 100644
 +CONFIG_USE_BOOTARGS=y
 +CONFIG_BOOTARGS="console=${console},${baudrate} root=/dev/mmcblk2p${rootpart} oops=panic panic=5 rw rootwait"
  CONFIG_DEFAULT_FDT_FILE="imx7d-pico-pi.dtb"
+ CONFIG_BOUNCE_BUFFER=y
  CONFIG_SPL_I2C_SUPPORT=y
- CONFIG_SPL_USB_HOST_SUPPORT=y
-@@ -34,7 +35,10 @@ CONFIG_CMD_MMC=y
+@@ -35,7 +36,10 @@ CONFIG_CMD_MMC=y
  CONFIG_CMD_USB=y
  CONFIG_CMD_USB_SDP=y
  CONFIG_CMD_USB_MASS_STORAGE=y
@@ -36,10 +37,10 @@ index 3a182dc..0a5b527 100644
  CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
 diff --git a/include/configs/pico-imx7d.h b/include/configs/pico-imx7d.h
-index 1884c58..1bec86c 100644
+index 23ada4abc3..356ec4c102 100644
 --- a/include/configs/pico-imx7d.h
 +++ b/include/configs/pico-imx7d.h
-@@ -88,7 +88,8 @@
+@@ -94,7 +94,8 @@
  		"name=rootfs,size=0,uuid=${uuid_gpt_rootfs}\0" \
  	"fastboot_partition_alias_system=rootfs\0" \
  	"setup_emmc=mmc dev 0; gpt write mmc 0 $partitions; reset;\0" \
@@ -49,7 +50,7 @@ index 1884c58..1bec86c 100644
  
  #define BOOT_TARGET_DEVICES(func) \
  	func(MMC, mmc, 0) \
-@@ -98,6 +99,39 @@
+@@ -104,6 +105,39 @@
  
  #include <config_distro_bootcmd.h>
  
@@ -89,8 +90,8 @@ index 1884c58..1bec86c 100644
  #define CONFIG_SYS_MEMTEST_START	0x80000000
  #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
  
-@@ -132,10 +166,11 @@
- #define CONFIG_POWER_PFUZE3000_I2C_ADDR	0x08
+@@ -148,10 +182,11 @@
+ #endif
  
  /* FLASH and environment organization */
 -#define CONFIG_ENV_SIZE			SZ_8K
@@ -103,6 +104,3 @@ index 1884c58..1bec86c 100644
  /*
   * Detect overlap between U-Boot image and environment area in build-time
   *
--- 
-2.7.4
-
