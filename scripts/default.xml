@@ -8,7 +8,7 @@
     <remote fetch="https://github.com/sbabic/" name="swupdate"/>
 
     <!-- SWUpdate Dev BSP -->
-    <project remote="bdx-iot" revision="master" name="meta-swupdate-dev" path="sources/meta-swupdate-dev">
+    <project remote="bdx-iot" revision="warrior" name="meta-swupdate-dev" path="sources/meta-swupdate-dev">
         <linkfile dest="setup-environment" src="scripts/setup-environment"/>
     </project>
 

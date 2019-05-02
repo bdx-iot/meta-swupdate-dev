@@ -19,7 +19,7 @@ Download the Swupdate-dev BSP source:
 $: PATH=${PATH}:~/bin
 $: mkdir swupdate-bsp
 $: cd swupdate-bsp
-$: repo init -u https://github.com/bdx-iot/meta-swupdate-dev -b master -m scripts/default.xml
+$: repo init -u https://github.com/bdx-iot/meta-swupdate-dev -b warrior -m scripts/default.xml
 $: repo sync -j${nproc}
 ```
 At the end of the commands you have every metadata you need to start work with.
