@@ -1,30 +1,31 @@
-From 6437acf86f9a832ec235c4eb17aa5d49804261f8 Mon Sep 17 00:00:00 2001
+From 03722645116aace69483f70c5db1ea8883c74461 Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
-Date: Wed, 13 Mar 2019 21:33:07 +0000
+Date: Fri, 3 May 2019 12:38:30 +0200
 Subject: [PATCH] pico-imx7d: add SWUpdate Requirements
 
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
-
 ---
- configs/pico-pi-imx7d_defconfig |  9 +++++---
- include/configs/pico-imx7d.h    | 41 ++++++++++++++++++++++++++++++---
- 2 files changed, 44 insertions(+), 6 deletions(-)
+ configs/pico-pi-imx7d_defconfig | 10 ++++++--
+ include/configs/pico-imx7d.h    | 42 +++++++++++++++++++++++++++++----
+ 2 files changed, 46 insertions(+), 6 deletions(-)
 
 diff --git a/configs/pico-pi-imx7d_defconfig b/configs/pico-pi-imx7d_defconfig
-index c8ac2ffd5f..6400482712 100644
+index c8ac2ffd5f..aa1977f2c7 100644
 --- a/configs/pico-pi-imx7d_defconfig
 +++ b/configs/pico-pi-imx7d_defconfig
-@@ -14,7 +14,8 @@ CONFIG_IMX_BOOTAUX=y
+@@ -14,7 +14,10 @@ CONFIG_IMX_BOOTAUX=y
  CONFIG_DISTRO_DEFAULTS=y
  CONFIG_NR_DRAM_BANKS=1
  CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=arch/arm/mach-imx/spl_sd.cfg"
 -CONFIG_BOOTCOMMAND="run findfdt; run finduuid; run distro_bootcmd"
 +CONFIG_USE_BOOTARGS=y
 +CONFIG_BOOTARGS="console=${console},${baudrate} root=/dev/mmcblk2p${rootpart} oops=panic panic=5 rw rootwait"
++CONFIG_FIT=y
++CONFIG_FIT_VERBOSE=y
  CONFIG_DEFAULT_FDT_FILE="imx7d-pico-pi.dtb"
  CONFIG_BOUNCE_BUFFER=y
  CONFIG_SPL_I2C_SUPPORT=y
-@@ -35,7 +36,10 @@ CONFIG_CMD_MMC=y
+@@ -35,7 +38,10 @@ CONFIG_CMD_MMC=y
  CONFIG_CMD_USB=y
  CONFIG_CMD_USB_SDP=y
  CONFIG_CMD_USB_MASS_STORAGE=y
@@ -36,16 +37,19 @@ index c8ac2ffd5f..6400482712 100644
  # CONFIG_CMD_MII is not set
  CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
-@@ -57,5 +61,4 @@ CONFIG_USB_GADGET_MANUFACTURER="FSL"
- CONFIG_USB_GADGET_VENDOR_NUM=0x0525
- CONFIG_USB_GADGET_PRODUCT_NUM=0xa4a5
- CONFIG_CI_UDC=y
--CONFIG_VIDEO=y
- CONFIG_OF_LIBFDT=y
 diff --git a/include/configs/pico-imx7d.h b/include/configs/pico-imx7d.h
-index 23ada4abc3..356ec4c102 100644
+index 23ada4abc3..4f15cb0d17 100644
 --- a/include/configs/pico-imx7d.h
 +++ b/include/configs/pico-imx7d.h
+@@ -46,7 +46,7 @@
+ #define CONFIG_DFU_ENV_SETTINGS \
+ 	"dfu_alt_info=" \
+ 		"spl raw 0x2 0x400;" \
+-		"u-boot raw 0x8a 0x400;" \
++		"u-boot raw 0x8a 0x1000;" \
+ 		"/boot/zImage ext4 0 1;" \
+ 		"/boot/imx7d-pico-hobbit.dtb ext4 0 1;" \
+ 		"/boot/imx7d-pico-pi.dtb ext4 0 1;" \
 @@ -94,7 +94,8 @@
  		"name=rootfs,size=0,uuid=${uuid_gpt_rootfs}\0" \
  	"fastboot_partition_alias_system=rootfs\0" \
@@ -56,7 +60,7 @@ index 23ada4abc3..356ec4c102 100644
  
  #define BOOT_TARGET_DEVICES(func) \
  	func(MMC, mmc, 0) \
-@@ -104,6 +105,39 @@
+@@ -104,6 +105,38 @@
  
  #include <config_distro_bootcmd.h>
  
@@ -64,10 +68,9 @@ index 23ada4abc3..356ec4c102 100644
 +#define CONFIG_BOOTCOMMAND	\
 +	"setenv bootargs 'console=${console},${baudrate} root=/dev/mmcblk2p'${rootpart}' rootwait rw';" \
 +	"run swu_setup; "	\
-+	"load mmc 0:${rootpart} 0x83000000 /boot/${fdtfile}; " \
-+	"load mmc 0:${rootpart} 0x80800000 /boot/${image}; " \
-+	"bootz ${loadaddr} - ${fdt_addr}; "
-+ 
++	"load mmc 0:${rootpart} 0x86000000 /boot/fitImage; " \
++	"bootm 0x86000000; "
++
 +#define SWUPDATE_ENV_SETTINGS \
 +	"bootlimit=1\0"	\
 +	"bootcount=0\0"	\
@@ -96,7 +99,7 @@ index 23ada4abc3..356ec4c102 100644
  #define CONFIG_SYS_MEMTEST_START	0x80000000
  #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 0x20000000)
  
-@@ -148,10 +182,11 @@
+@@ -148,10 +181,11 @@
  #endif
  
  /* FLASH and environment organization */
@@ -110,3 +113,6 @@ index 23ada4abc3..356ec4c102 100644
  /*
   * Detect overlap between U-Boot image and environment area in build-time
   *
+-- 
+2.17.1
+
