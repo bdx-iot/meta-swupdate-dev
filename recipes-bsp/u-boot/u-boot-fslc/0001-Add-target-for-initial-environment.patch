@@ -1,0 +1,31 @@
+From f1e0ba7f88720b107b3db3b840c162510a2c570c Mon Sep 17 00:00:00 2001
+From: Joris Offouga <offougajoris@gmail.com>
+Date: Thu, 2 May 2019 22:42:03 +0200
+Subject: [PATCH] Add target for initial environment
+
+Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+---
+ Makefile | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index aedc2ea4d9..2b50ac466b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1945,6 +1945,13 @@ endif
+ 	$(build)=$(build-dir) $(@:.ko=.o)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+ 
++quiet_cmd_genenv = GENENV $@
++cmd_genenv = $(OBJCOPY) --dump-section .rodata.default_environment=$@ env/common.o; \
++	sed --in-place -e 's/\x00/\x0A/g' $@
++
++u-boot-initial-env: u-boot.bin
++	$(call if_changed,genenv)
++
+ # Consistency checks
+ # ---------------------------------------------------------------------------
+ 
+-- 
+2.17.1
+

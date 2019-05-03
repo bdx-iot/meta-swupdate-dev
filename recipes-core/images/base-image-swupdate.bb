@@ -32,6 +32,7 @@ IMAGE_INSTALL_append = " \
 	swupdate-tools \
 	swu-environment \
 	libubootenv \
+	u-boot-fslc-initial-env \
 "
 
 # Kernel
