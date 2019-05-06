@@ -7,6 +7,7 @@ SRC_URI_append_imx7d-pico = " \
 
 SRC_URI_append_imx7s-warp = " \
 	file://0001-warp7-add-SWUpdate-requirements.patch \
+	file://0002-Add-preboot.patch \
 "
 
 SRC_URI_append = " file://0001-Add-target-for-initial-environment.patch"
