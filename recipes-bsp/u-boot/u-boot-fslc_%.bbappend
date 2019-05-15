@@ -12,7 +12,7 @@ SRC_URI_append_imx7s-warp = " \
 
 SRC_URI_append = " file://0001-Add-target-for-initial-environment.patch"
 
-DEPENDS_append_imx7s-warp += " u-boot-scr"
+DEPENDS_append += " u-boot-scr"
 
 # See Stefano's patch : http://patchwork.ozlabs.org/patch/1051159/
 

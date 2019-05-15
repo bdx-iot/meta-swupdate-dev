@@ -18,5 +18,3 @@ do_deploy() {
 }
 
 addtask do_deploy after do_compile before do_build
-
-COMPATIBLE_MACHINE = "(imx7s-warp)"
