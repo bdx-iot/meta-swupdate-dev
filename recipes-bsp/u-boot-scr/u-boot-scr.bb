@@ -4,13 +4,14 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 
 DEPENDS = "u-boot-mkimage-native"
 
-SRC_URI = "file://boot.cmd"
-
-do_compile() {
-	mkimage -C none -A arm -T script -d "${WORKDIR}/boot.cmd" boot.scr
-}
+SRC_URI = "file://boot.cmd.in"
 
 inherit deploy
+
+do_compile() {
+	sed -e 's|@@BLK_DEVICE@@|${BLK_DEVICE}|' "${WORKDIR}/boot.cmd.in" > "${WORKDIR}/boot.cmd"
+	mkimage -C none -A arm -T script -d "${WORKDIR}/boot.cmd" boot.scr
+}
 
 do_deploy() {
 	install -d ${DEPLOYDIR}
@@ -18,3 +19,5 @@ do_deploy() {
 }
 
 addtask do_deploy after do_compile before do_build
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
