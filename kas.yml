@@ -1,0 +1,63 @@
+header:
+  version: 2
+
+machine: imx7s-warp
+distro: poky
+target:
+  - update-image
+
+repos:
+  meta-swupdate-dev:
+
+  poky:
+    url: https://git.yoctoproject.org/git/poky
+    refspec: f2b442c5c8e3925a4d3fc9693f1e47863dade2a9
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-freescale:
+    url: https://github.com/Freescale/meta-freescale
+    refspec: ad77ed4e5b6370abc1bc7813684b1808a5c18185
+
+  meta-freescale-3rdparty:
+    url: https://github.com/Freescale/meta-freescale-3rdparty
+    refspec: 55356fd749bc820521cecfc8cd92e15461f0ff8a
+
+  meta-openembedded:
+    url: http://git.openembedded.org/meta-openembedded
+    refspec: d7338c2b3a96ef7d8bf9df59dcde11f8c131f9c0
+    layers:
+      meta-oe:
+      meta-python:
+      meta-networking:
+
+  meta-swupdate:
+    url: https://github.com/sbabic/meta-swupdate
+    refspec: d345ba975dc72e1674b2356ce01c50ac8f320f37
+
+bblayers_conf_header:
+  standard: |
+    POKY_BBLAYERS_CONF_VERSION = "2"
+    BBPATH = "${TOPDIR}"
+    BBFILES ?= ""
+local_conf_header:
+  standard: |
+    CONF_VERSION = "1"
+    PACKAGE_CLASSES = "package_rpm"
+    SDKMACHINE = "x86_64"
+    USER_CLASSES = "buildstats image-mklibs image-prelink"
+    PATCHRESOLVE = "noop"
+  debug-tweaks: |
+    EXTRA_IMAGE_FEATURES = "debug-tweaks"
+  diskmon: |
+    BB_DISKMON_DIRS = "\
+        STOPTASKS,${TMPDIR},1G,100K \
+        STOPTASKS,${DL_DIR},1G,100K \
+        STOPTASKS,${SSTATE_DIR},1G,100K \
+        STOPTASKS,/tmp,100M,100K \
+        ABORT,${TMPDIR},100M,1K \
+        ABORT,${DL_DIR},100M,1K \
+        ABORT,${SSTATE_DIR},100M,1K \
+        ABORT,/tmp,10M,1K"
