@@ -1,10 +1,7 @@
-From 704dd2fc1ca77b0629d0aa38e21b7c64c1ae2620 Mon Sep 17 00:00:00 2001
+From ce8e354145780443978d88793bfc43e3723475ee Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
-Date: Fri, 3 May 2019 12:39:57 +0200
+Date: Wed, 10 Jul 2019 20:59:33 +0200
 Subject: [PATCH 2/2] pico-imx7d: Disable CONFIG_VIDEO
-
-This feature causes the U-Boot break if the board
-is not powered by an external usb hub
 
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
@@ -12,16 +9,15 @@ Signed-off-by: Joris Offouga <offougajoris@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configs/pico-pi-imx7d_defconfig b/configs/pico-pi-imx7d_defconfig
-index aa1977f2c7..6cc86221b2 100644
+index 6192ccb6eb..e8ca2464f8 100644
 --- a/configs/pico-pi-imx7d_defconfig
 +++ b/configs/pico-pi-imx7d_defconfig
-@@ -63,5 +63,5 @@ CONFIG_USB_GADGET_MANUFACTURER="FSL"
+@@ -71,4 +71,4 @@ CONFIG_USB_GADGET_MANUFACTURER="FSL"
  CONFIG_USB_GADGET_VENDOR_NUM=0x0525
  CONFIG_USB_GADGET_PRODUCT_NUM=0xa4a5
  CONFIG_CI_UDC=y
 -CONFIG_VIDEO=y
 +# CONFIG_VIDEO is not set
- CONFIG_OF_LIBFDT=y
 -- 
 2.17.1
 
