@@ -1,24 +1,23 @@
-From 19cd83cdb8032f60eac91735268ccaa823b2ad20 Mon Sep 17 00:00:00 2001
+From d21a2995d9a61243c38a0e421631b4707f8d5775 Mon Sep 17 00:00:00 2001
 From: Pierre-Jean Texier <pjtexier@koncepto.io>
-Date: Sun, 9 Jun 2019 13:19:38 +0000
+Date: Wed, 10 Jul 2019 19:24:45 +0200
 Subject: [PATCH] warp7: add SWUpdate requirements
 
 Signed-off-by: Pierre-Jean Texier <pjtexier@koncepto.io>
 ---
  configs/warp7_defconfig |  5 +++++
- include/configs/warp7.h | 30 +++++++++++++++++++++++++++++-
- 2 files changed, 34 insertions(+), 1 deletion(-)
+ include/configs/warp7.h | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index 28aa06f..14675d3 100644
+index 5b35113..bd0ec15 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
-@@ -11,12 +11,15 @@ CONFIG_NR_DRAM_BANKS=1
+@@ -11,12 +11,14 @@ CONFIG_IMX_BOOTAUX=y
  CONFIG_FIT=y
  CONFIG_FIT_VERBOSE=y
  CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/warp7/imximage.cfg"
 +CONFIG_USE_PREBOOT=y
-+CONFIG_PREBOOT="if env exists swu_setup; then echo 'Use default'; else env save; env save;fi"
  CONFIG_BOUNCE_BUFFER=y
  CONFIG_HUSH_PARSER=y
  # CONFIG_CMD_BOOTD is not set
@@ -29,26 +28,24 @@ index 28aa06f..14675d3 100644
  CONFIG_CMD_MEMTEST=y
  CONFIG_CMD_DFU=y
  CONFIG_CMD_GPIO=y
-@@ -34,6 +37,8 @@ CONFIG_CMD_FS_GENERIC=y
+@@ -34,6 +36,9 @@ CONFIG_CMD_FS_GENERIC=y
  CONFIG_OF_CONTROL=y
  CONFIG_DEFAULT_DEVICE_TREE="imx7s-warp"
  CONFIG_NET_RANDOM_ETHADDR=y
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
++CONFIG_BOOTCOUNT_BOOTLIMIT=1
  CONFIG_DFU_MMC=y
  CONFIG_DM_GPIO=y
  CONFIG_DM_I2C=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index 043f286..8efb797 100644
+index 8ceaa0c..bcf0e01 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
-@@ -39,10 +39,36 @@
- #define CONFIG_SERIAL_TAG
- 
+@@ -27,8 +27,34 @@
  #define CONFIG_DFU_ENV_SETTINGS \
--	"dfu_alt_info=boot raw 0x2 0x400 mmcpart 1\0" \
-+	"dfu_alt_info=boot raw 0x2 0x1000 mmcpart 1\0" \
-+
+ 	"dfu_alt_info=boot raw 0x2 0x1000 mmcpart 1\0" \
+ 
 +#define SWU_ENV_SETTINGS \
 +	"bootlimit=1\0"	\
 +	"bootcount=0\0"	\
@@ -72,7 +69,7 @@ index 043f286..8efb797 100644
 +	\
 +	"altbootcmd=run swu_altbootcmd; " \
 +	"run bootcmd\0" \
- 
++
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	CONFIG_DFU_ENV_SETTINGS \
 +	SWU_ENV_SETTINGS \
@@ -80,7 +77,7 @@ index 043f286..8efb797 100644
  	"script=boot.scr\0" \
  	"script_signed=boot.scr.imx-signed\0" \
  	"image=zImage\0" \
-@@ -133,6 +159,8 @@
+@@ -119,6 +145,8 @@
  #define CONFIG_ENV_SIZE			SZ_8K
  
  #define CONFIG_ENV_OFFSET		(8 * SZ_64K)
