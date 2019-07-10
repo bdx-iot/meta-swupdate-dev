@@ -9,8 +9,6 @@ SRC_URI_append_imx7s-warp = " \
 	file://0001-warp7-add-SWUpdate-requirements.patch \
 "
 
-SRC_URI_append = " file://0001-Add-target-for-initial-environment.patch"
-
 DEPENDS_append += " u-boot-scr"
 
 # See Stefano's patch : http://patchwork.ozlabs.org/patch/1051159/
