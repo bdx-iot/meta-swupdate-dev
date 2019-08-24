@@ -1,0 +1,63 @@
+software =
+{
+	version = "1.0.0";
+
+	stm32mp157a-dk1 = {
+		hardware-compatibility: [ "revC-01"];
+		stable : {
+			rootfsA : {
+				images: (
+					{
+						filename = "base-image-swupdate-stm32mp157a-dk1.ext4.gz";
+						type = "raw";
+						sha256 = "@base-image-swupdate-stm32mp157a-dk1.ext4.gz";
+						installed-directly = true;
+						compressed = true;
+						device = "/dev/mmcblk0p5";
+					}
+				);
+					uboot: (
+					{
+						name = "bootcount";
+						value = "0";
+					},
+					{
+						name = "upgrade_available";
+						value = "1";
+					},
+					{
+						name = "rootpart";
+						value = "5";
+					}
+				);
+
+			};
+			rootfsB : {
+				images: (
+					{
+						filename = "base-image-swupdate-stm32mp157a-dk1.ext4.gz";
+						type = "raw";
+						sha256 = "@base-image-swupdate-stm32mp157a-dk1.ext4.gz";
+						installed-directly = true;
+						compressed = true;
+						device = "/dev/mmcblk0p6";
+					}
+				);
+					uboot: (
+					{
+						name = "bootcount";
+						value = "0";
+					},
+					{
+						name = "upgrade_available";
+						value = "1";
+					},
+					{
+						name = "rootpart";
+						value = "6";
+					}
+				);
+			};
+		};
+	}
+}

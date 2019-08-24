@@ -37,6 +37,10 @@ repos:
     url: https://github.com/sbabic/meta-swupdate
     refspec: d345ba975dc72e1674b2356ce01c50ac8f320f37
 
+  meta-stm32mp1:
+    url: https://github.com/bdx-iot/meta-stm32mp1
+    refspec: 907cef70f85cfb8036ec93f61213d15c40388b38
+
 bblayers_conf_header:
   standard: |
     POKY_BBLAYERS_CONF_VERSION = "2"
