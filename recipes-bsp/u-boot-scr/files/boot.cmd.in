@@ -1,4 +1,10 @@
-setenv bootargs 'console=${console},${baudrate} root=@@BLK_DEVICE@@p'${rootpart}' rootwait rw'
+if env exists console
+then 
+	setenv bootargs 'console=${console},${baudrate} root=@@BLK_DEVICE@@p'${rootpart}' oops=panic panic=5 rootwait rw'
+else 
+	setenv bootargs 'root=@@BLK_DEVICE@@p'${rootpart}' oops=panic panic=5 rootwait rw'
+fi
+
 run swu_setup
-load mmc 0:${rootpart} 0x86000000 /boot/fitImage
-bootm 0x86000000
+load mmc 0:${rootpart} @@FIT_ADDR@@ /boot/fitImage
+bootm @@FIT_ADDR@@

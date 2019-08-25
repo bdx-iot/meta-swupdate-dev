@@ -9,7 +9,7 @@ SRC_URI = "file://boot.cmd.in"
 inherit deploy
 
 do_compile() {
-	sed -e 's|@@BLK_DEVICE@@|${BLK_DEVICE}|' "${WORKDIR}/boot.cmd.in" > "${WORKDIR}/boot.cmd"
+	sed -e 's|@@BLK_DEVICE@@|${BLK_DEVICE}|' -e 's|@@FIT_ADDR@@|${FIT_ADDR}|' "${WORKDIR}/boot.cmd.in" > "${WORKDIR}/boot.cmd"
 	mkimage -C none -A arm -T script -d "${WORKDIR}/boot.cmd" boot.scr
 }
 

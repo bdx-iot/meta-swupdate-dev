@@ -32,7 +32,6 @@ IMAGE_INSTALL_append = " \
 	swupdate-tools \
 	swu-environment \
 	libubootenv \
-	u-boot-fslc-initial-env \
 "
 
 # Kernel
@@ -47,6 +46,16 @@ IMAGE_INSTALL_append = " \
 IMAGE_INSTALL_append_imx7d-pico = "\
 	dnsmasq \
 	hostapd \
+"
+
+# U-Boot initial env for i.MX
+IMAGE_INSTALL_append_imx = "\
+	u-boot-fslc-initial-env \
+"
+
+# Remove initial env for stm32mp1 when i.MX board is building
+IMAGE_INSTALL_remove_imx = "\
+	u-boot-mainline-initial-env \
 "
 
 IMAGE_BUILDINFO_VARS = " \
