@@ -25,6 +25,6 @@
     <project remote="swupdate" revision="warrior" name="meta-swupdate" path="sources/meta-swupdate"/>
 
     <!-- STM32MP1 BSP -->
-    <project remote="bdx-iot" revision="warrior" name="meta-stm32mp1" path="sources/meta-stm32mp1">
+    <project remote="bdx-iot" revision="warrior" name="meta-stm32mp1" path="sources/meta-stm32mp1"/>
 
 </manifest>
