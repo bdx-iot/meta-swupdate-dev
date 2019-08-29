@@ -1,39 +1,39 @@
-From 8bfe40c738438a46cf129d0d180a7776e9cfecce Mon Sep 17 00:00:00 2001
+From 618ee864fc0956ff7046fab22d43f7bf55a1a068 Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
-Date: Sat, 24 Aug 2019 09:56:20 +0200
+Date: Thu, 29 Aug 2019 18:11:38 +0200
 Subject: [PATCH] stm32mp1: add SWUpdate Requirements
 
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
  configs/stm32mp15_basic_defconfig |  2 ++
- include/configs/stm32mp1.h        | 26 ++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ include/configs/stm32mp1.h        | 25 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
 diff --git a/configs/stm32mp15_basic_defconfig b/configs/stm32mp15_basic_defconfig
-index 5f1db00af2..8bd26d1951 100644
+index 6d08c92493..80bf53ab40 100644
 --- a/configs/stm32mp15_basic_defconfig
 +++ b/configs/stm32mp15_basic_defconfig
-@@ -9,6 +9,7 @@ CONFIG_SPL_SPI_SUPPORT=y
+@@ -11,6 +11,7 @@ CONFIG_SPL_TEXT_BASE=0x2FFC2500
  CONFIG_DISTRO_DEFAULTS=y
  CONFIG_FIT=y
  CONFIG_BOOTCOMMAND="run bootcmd_stm32mp"
 +CONFIG_PREBOOT="if env exists swu_setup; then echo 'Use default'; else env save; env save;fi"
- CONFIG_SPL_TEXT_BASE=0x2FFC2500
  CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_USE_PARTITION=y
  CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_PARTITION=3
-@@ -55,6 +56,7 @@ CONFIG_ENV_UBI_PART="UBI"
+ CONFIG_SPL_I2C_SUPPORT=y
+@@ -57,6 +58,7 @@ CONFIG_ENV_IS_IN_UBI=y
+ CONFIG_ENV_UBI_PART="UBI"
  CONFIG_ENV_UBI_VOLUME="uboot_config"
  CONFIG_ENV_UBI_VOLUME_REDUND="uboot_config_r"
- CONFIG_STM32_ADC=y
 +CONFIG_BOOTCOUNT_ENV=y
  CONFIG_USB_FUNCTION_FASTBOOT=y
  CONFIG_FASTBOOT_BUF_ADDR=0xC0000000
  CONFIG_FASTBOOT_BUF_SIZE=0x02000000
 diff --git a/include/configs/stm32mp1.h b/include/configs/stm32mp1.h
-index a1e55131a0..990351c5c9 100644
+index 69ba4e2fb6..c2cce31477 100644
 --- a/include/configs/stm32mp1.h
 +++ b/include/configs/stm32mp1.h
-@@ -146,6 +146,31 @@
+@@ -142,6 +142,30 @@
  #define STM32MP_MTDPARTS
  #endif
 
@@ -61,11 +61,10 @@ index a1e55131a0..990351c5c9 100644
 +	\
 +	"altbootcmd=run swu_altbootcmd; " \
 +	"run bootcmd_mmc0\0"
-+
  /*
   * memory layout for 32M uncompressed/compressed kernel,
   * 1M fdt, 1M script, 1M pxe and 1M for splashimage
-@@ -166,6 +191,7 @@
+@@ -164,6 +188,7 @@
 	STM32MP_BOOTCMD \
 	STM32MP_MTDPARTS \
 	BOOTENV \
