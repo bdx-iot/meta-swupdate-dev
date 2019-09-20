@@ -20,7 +20,7 @@ the script prepares the calling shell for running bitbake on the build
 directory <build-dir>. The build directory configuration is unchanged.
 "
     echo -e "
-Supported machines: imx7d-pico and imx7s-warp
+Supported machines: imx7d-pico, imx7s-warp, stm32mp157a-dk1
 Examples:
 - To create a new Yocto build directory:
   $ MACHINE=imx7s-warp source $PROGNAME warp7-build
@@ -31,7 +31,7 @@ Examples:
 
 clean_up()
 {
-   unset EULA LIST_MACHINES VALID_MACHINE
+   unset EULA LIST_MACHINES VALID_MACHINE USE_VIDEO
    unset CWD TEMPLATES SHORTOPTS LONGOPTS ARGS PROGNAME
    unset generated_config updated
    unset MACHINE SDKMACHINE DISTRO OEROOT
@@ -139,9 +139,18 @@ fi
 
 # EULA has been accepted already (ACCEPT_FSL_EULA is set in local.conf)
 if grep -q '^\s*ACCEPT_FSL_EULA\s*=\s*["'\'']..*["'\'']' conf/local.conf; then
-
+    echo "ACCEPT_FSL_EULA has been accepted already" > /dev/null 2>&1
 else
     echo "ACCEPT_FSL_EULA = \"1\"" >> conf/local.conf
+fi
+
+# USE_VIDEO has been accepted already
+if grep -q '^\s*USE_VIDEO\s*=\s*["'\'']..*["'\'']' conf/local.conf; then
+    echo "USE_VIDEO has been accepted already"  > /dev/null 2>&1
+else
+    if [ -n "$USE_VIDEO" ]; then
+        echo "USE_VIDEO = \"1\"" >> conf/local.conf
+    fi
 fi
 
 cat <<EOF
