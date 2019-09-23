@@ -1,3 +1,3 @@
-IMAGE_INSTALL_append_imx7d-pico = " \
+IMAGE_INSTALL_append = " \
 	packagegroup-qt5 \
 "
