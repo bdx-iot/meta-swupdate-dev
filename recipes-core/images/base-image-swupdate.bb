@@ -16,6 +16,8 @@ IMAGE_INSTALL_append = " \
 	can-utils \
 	iproute2 \
 	i2c-tools \
+	libgpiod \
+	spitools \
 	cryptsetup \
 	parted \
 	e2fsprogs-e2fsck \
