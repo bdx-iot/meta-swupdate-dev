@@ -50,14 +50,13 @@ IMAGE_INSTALL_append_imx7d-pico = "\
 	hostapd \
 "
 
-# U-Boot initial env for i.MX
+# U-Boot initial env
 IMAGE_INSTALL_append_imx = "\
 	u-boot-fslc-initial-env \
 "
 
-# Remove initial env for stm32mp1 when i.MX board is building
-IMAGE_INSTALL_remove_imx = "\
-	u-boot-mainline-initial-env \
+IMAGE_INSTALL_append_stm32mp1 = "\
+	u-boot-initial-env \
 "
 
 IMAGE_BUILDINFO_VARS = " \
