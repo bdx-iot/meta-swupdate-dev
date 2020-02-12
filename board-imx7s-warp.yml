@@ -1,0 +1,8 @@
+header:
+  version: 8
+
+machine: imx7s-warp
+
+local_conf_header:
+  imx7s-warp: |
+    BLK_DEVICE_imx7s-warp = "/dev/mmcblk1"

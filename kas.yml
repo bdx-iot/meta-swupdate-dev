@@ -1,7 +1,6 @@
 header:
   version: 2
 
-machine: imx7s-warp
 distro: poky
 target:
   - update-image
@@ -11,7 +10,7 @@ repos:
 
   poky:
     url: https://git.yoctoproject.org/git/poky
-    refspec: f2b442c5c8e3925a4d3fc9693f1e47863dade2a9
+    refspec: master
     layers:
       meta:
       meta-poky:
@@ -19,15 +18,15 @@ repos:
 
   meta-freescale:
     url: https://github.com/Freescale/meta-freescale
-    refspec: ad77ed4e5b6370abc1bc7813684b1808a5c18185
+    refspec: master
 
   meta-freescale-3rdparty:
     url: https://github.com/Freescale/meta-freescale-3rdparty
-    refspec: 55356fd749bc820521cecfc8cd92e15461f0ff8a
+    refspec: master
 
   meta-openembedded:
     url: http://git.openembedded.org/meta-openembedded
-    refspec: d7338c2b3a96ef7d8bf9df59dcde11f8c131f9c0
+    refspec: master
     layers:
       meta-oe:
       meta-python:
@@ -35,11 +34,11 @@ repos:
 
   meta-swupdate:
     url: https://github.com/sbabic/meta-swupdate
-    refspec: d345ba975dc72e1674b2356ce01c50ac8f320f37
+    refspec: master
 
   meta-stm32mp1:
     url: https://github.com/bdx-iot/meta-stm32mp1
-    refspec: 907cef70f85cfb8036ec93f61213d15c40388b38
+    refspec: master
 
 bblayers_conf_header:
   standard: |
@@ -47,6 +46,22 @@ bblayers_conf_header:
     BBPATH = "${TOPDIR}"
     BBFILES ?= ""
 local_conf_header:
+  reduce_diskspace: |
+    INHERIT += "rm_work_and_downloads"
+  systemd: |
+    VIRTUAL-RUNTIME_init_manager = "systemd"
+    DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
+    VIRTUAL-RUNTIME_initscripts = ""
+    DISTRO_FEATURES_append = " systemd"
+  swupdate: |
+    PREFERRED_VERSION_swupdate = "2019.11+gitAUTOINC+e9df70498e"
+    IMAGE_FSTYPES_append = " ext4.gz"
+    IMAGE_BOOT_FILES = "boot.scr"
+  libubootenv: |
+    PREFERRED_PROVIDER_u-boot-fw-utils = "libubootenv"
+  kernel: |
+    KERNEL_CLASSES += "kernel-fitimage"
+    KERNEL_IMAGETYPES = "fitImage zImage"
   standard: |
     CONF_VERSION = "1"
     PACKAGE_CLASSES = "package_rpm"

@@ -1,16 +1,16 @@
-From 618ee864fc0956ff7046fab22d43f7bf55a1a068 Mon Sep 17 00:00:00 2001
+From debd06f09ac26dba01d323aebdf676ecaaa6035d Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
-Date: Thu, 29 Aug 2019 18:11:38 +0200
+Date: Tue, 11 Feb 2020 21:13:40 +0100
 Subject: [PATCH] stm32mp1: add SWUpdate Requirements
 
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
  configs/stm32mp15_basic_defconfig |  2 ++
- include/configs/stm32mp1.h        | 25 +++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ include/configs/stm32mp1.h        | 26 ++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
 diff --git a/configs/stm32mp15_basic_defconfig b/configs/stm32mp15_basic_defconfig
-index 6d08c92493..80bf53ab40 100644
+index cdaa501349..d0cab0edf0 100644
 --- a/configs/stm32mp15_basic_defconfig
 +++ b/configs/stm32mp15_basic_defconfig
 @@ -11,6 +11,7 @@ CONFIG_SPL_TEXT_BASE=0x2FFC2500
@@ -21,22 +21,22 @@ index 6d08c92493..80bf53ab40 100644
  CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_USE_PARTITION=y
  CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_PARTITION=3
  CONFIG_SPL_I2C_SUPPORT=y
-@@ -57,6 +58,7 @@ CONFIG_ENV_IS_IN_UBI=y
+@@ -59,6 +60,7 @@ CONFIG_ENV_OFFSET_REDUND=0x2C0000
  CONFIG_ENV_UBI_PART="UBI"
  CONFIG_ENV_UBI_VOLUME="uboot_config"
  CONFIG_ENV_UBI_VOLUME_REDUND="uboot_config_r"
 +CONFIG_BOOTCOUNT_ENV=y
- CONFIG_USB_FUNCTION_FASTBOOT=y
- CONFIG_FASTBOOT_BUF_ADDR=0xC0000000
- CONFIG_FASTBOOT_BUF_SIZE=0x02000000
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_DFU_MMC=y
+ CONFIG_DFU_RAM=y
 diff --git a/include/configs/stm32mp1.h b/include/configs/stm32mp1.h
-index 69ba4e2fb6..c2cce31477 100644
+index c302d72af8..777dcfc20f 100644
 --- a/include/configs/stm32mp1.h
 +++ b/include/configs/stm32mp1.h
-@@ -142,6 +142,30 @@
- #define STM32MP_MTDPARTS
+@@ -182,6 +182,31 @@
+ #define STM32MP_DFU_ALT_INFO
  #endif
-
+ 
 +#define SWUPDATE_ENV_SETTINGS \
 +	"bootlimit=1\0"	\
 +	"bootcount=0\0"	\
@@ -61,17 +61,18 @@ index 69ba4e2fb6..c2cce31477 100644
 +	\
 +	"altbootcmd=run swu_altbootcmd; " \
 +	"run bootcmd_mmc0\0"
++
  /*
   * memory layout for 32M uncompressed/compressed kernel,
   * 1M fdt, 1M script, 1M pxe and 1M for splashimage
-@@ -164,6 +188,7 @@
-	STM32MP_BOOTCMD \
-	STM32MP_MTDPARTS \
-	BOOTENV \
+@@ -206,6 +231,7 @@
+ 	STM32MP_DFU_ALT_RAM \
+ 	STM32MP_DFU_ALT_INFO \
+ 	BOOTENV \
 +	SWUPDATE_ENV_SETTINGS \
-	"boot_net_usb_start=true\0"
-
+ 	"boot_net_usb_start=true\0"
+ 
  #endif /* ifndef CONFIG_SPL_BUILD */
---
-2.17.1
+-- 
+2.20.1
 
