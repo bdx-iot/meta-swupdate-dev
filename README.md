@@ -34,3 +34,15 @@ Flash image
 ```
 sudo bmaptool copy base-image-swupdate-<machine-name>.wic.gz /dev/sdX
 ```
+
+or build the bmap native tool (done once)
+
+```
+bitbake bmap-tools-native -c addto_recipe_sysroot
+```
+
+and insert your SD Card to flash the image:
+
+```
+oe-run-native bmap-tools-native bmaptool copy tmp/deploy/images/<machine-name>/base-image-swupdate-<machine-name>.wic.gz /dev/sdX
+```
