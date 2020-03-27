@@ -1,19 +1,20 @@
-From d21a2995d9a61243c38a0e421631b4707f8d5775 Mon Sep 17 00:00:00 2001
-From: Pierre-Jean Texier <pjtexier@koncepto.io>
-Date: Wed, 10 Jul 2019 19:24:45 +0200
+From 4f85f41b0a62ac4e8e92447e2ca10011f097e9d8 Mon Sep 17 00:00:00 2001
+From: Joris Offouga <offougajoris@gmail.com>
+Date: Sun, 15 Mar 2020 20:31:20 +0000
 Subject: [PATCH] warp7: add SWUpdate requirements
 
 Signed-off-by: Pierre-Jean Texier <pjtexier@koncepto.io>
+Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
- configs/warp7_defconfig |  5 +++++
- include/configs/warp7.h | 28 ++++++++++++++++++++++++++++
+ configs/warp7_defconfig |  7 +++++++
+ include/configs/warp7.h | 26 ++++++++++++++++++++++++++
  2 files changed, 33 insertions(+)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index 5b35113..bd0ec15 100644
+index d31ca28fff..671af42c9f 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
-@@ -11,12 +11,14 @@ CONFIG_IMX_BOOTAUX=y
+@@ -13,12 +13,14 @@ CONFIG_IMX_HAB=y
  CONFIG_FIT=y
  CONFIG_FIT_VERBOSE=y
  CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/warp7/imximage.cfg"
@@ -28,9 +29,13 @@ index 5b35113..bd0ec15 100644
  CONFIG_CMD_MEMTEST=y
  CONFIG_CMD_DFU=y
  CONFIG_CMD_GPIO=y
-@@ -34,6 +36,9 @@ CONFIG_CMD_FS_GENERIC=y
+@@ -35,8 +37,13 @@ CONFIG_CMD_FAT=y
+ CONFIG_CMD_FS_GENERIC=y
  CONFIG_OF_CONTROL=y
  CONFIG_DEFAULT_DEVICE_TREE="imx7s-warp"
++CONFIG_SYS_REDUNDAND_ENVIRONMENT=y
++CONFIG_ENV_OFFSET_REDUND=0xE0000
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
  CONFIG_NET_RANDOM_ETHADDR=y
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
@@ -39,10 +44,10 @@ index 5b35113..bd0ec15 100644
  CONFIG_DM_GPIO=y
  CONFIG_DM_I2C=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index 8ceaa0c..bcf0e01 100644
+index da894ec0ca..2e0810c42e 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
-@@ -27,8 +27,34 @@
+@@ -27,6 +27,30 @@
  #define CONFIG_DFU_ENV_SETTINGS \
  	"dfu_alt_info=boot raw 0x2 0x1000 mmcpart 1\0" \
  
@@ -70,22 +75,18 @@ index 8ceaa0c..bcf0e01 100644
 +	"altbootcmd=run swu_altbootcmd; " \
 +	"run bootcmd\0" \
 +
+ /* When booting with FIT specify the node entry containing boot.scr */
+ #if defined(CONFIG_FIT)
+ #define BOOT_SCR_STRING "source ${bootscriptaddr}:${bootscr_fitimage_name}\0"
+@@ -40,6 +64,8 @@
+ 
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	CONFIG_DFU_ENV_SETTINGS \
 +	SWU_ENV_SETTINGS \
-+	"rootpart=2\0"	\
++	"rootpart=2\0"     \
  	"script=boot.scr\0" \
+ 	"bootscr_fitimage_name=bootscr\0" \
  	"script_signed=boot.scr.imx-signed\0" \
- 	"image=zImage\0" \
-@@ -119,6 +145,8 @@
- #define CONFIG_ENV_SIZE			SZ_8K
- 
- #define CONFIG_ENV_OFFSET		(8 * SZ_64K)
-+#define CONFIG_ENV_OFFSET_REDUND	(10 * SZ_64K)
-+
- #define CONFIG_SYS_FSL_USDHC_NUM	1
- 
- #define CONFIG_SYS_MMC_ENV_DEV		0
 -- 
-2.7.4
+2.20.1
 
