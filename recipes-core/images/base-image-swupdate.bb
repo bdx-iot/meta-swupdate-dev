@@ -16,7 +16,7 @@ IMAGE_INSTALL_append = " \
 	can-utils \
 	iproute2 \
 	i2c-tools \
-	libgpiod \
+	libgpiod-tools \
 	spitools \
 	cryptsetup \
 	parted \
@@ -32,8 +32,7 @@ IMAGE_INSTALL_append = " \
 	swupdate \
 	swupdate-www \
 	swupdate-tools \
-	swu-environment \
-	libubootenv \
+	libubootenv-bin \
 "
 
 # Kernel
