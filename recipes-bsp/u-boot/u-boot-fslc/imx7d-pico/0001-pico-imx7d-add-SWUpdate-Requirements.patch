@@ -1,100 +1,59 @@
-From 1279e5c5932015dbff6b7e6c5ab97c2f8030e3ad Mon Sep 17 00:00:00 2001
+From 82c07a356f997b4c817ec7159d1913de818cba73 Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
-Date: Wed, 10 Jul 2019 20:58:30 +0200
-Subject: [PATCH 1/2] pico-imx7d: add SWUpdate Requirements
+Date: Sat, 14 Mar 2020 13:08:34 +0000
+Subject: [PATCH] pico-imx7d: add SWUpdate Requirements
 
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
- configs/pico-pi-imx7d_defconfig | 12 +++++--
- include/configs/pico-imx7d.h    | 64 ++++++++++++++++-----------------
- 2 files changed, 39 insertions(+), 37 deletions(-)
+ configs/pico-pi-imx7d_defconfig | 11 +++++++++--
+ include/configs/pico-imx7d.h    | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 36 insertions(+), 3 deletions(-)
 
 diff --git a/configs/pico-pi-imx7d_defconfig b/configs/pico-pi-imx7d_defconfig
-index 042affe01b..6192ccb6eb 100644
+index 61e83520d5..876c8327ad 100644
 --- a/configs/pico-pi-imx7d_defconfig
 +++ b/configs/pico-pi-imx7d_defconfig
-@@ -14,7 +14,11 @@ CONFIG_IMX_RDC=y
+@@ -16,8 +16,12 @@ CONFIG_IMX_RDC=y
  CONFIG_IMX_BOOTAUX=y
+ CONFIG_SPL_TEXT_BASE=0x00911000
  CONFIG_DISTRO_DEFAULTS=y
- CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=arch/arm/mach-imx/spl_sd.cfg"
--CONFIG_BOOTCOMMAND="run findfdt; run finduuid; run distro_bootcmd"
-+CONFIG_BOOTCOMMAND="run bootcmd_mmc0"
-+CONFIG_USE_BOOTARGS=y
-+CONFIG_BOOTARGS="console=${console},${baudrate} root=/dev/mmcblk2p${rootpart} oops=panic panic=5 rw rootwait"
 +CONFIG_FIT=y
 +CONFIG_FIT_VERBOSE=y
+ CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=arch/arm/mach-imx/spl_sd.cfg"
+-CONFIG_BOOTCOMMAND="run findfdt; run finduuid; run distro_bootcmd"
++CONFIG_USE_BOOTARGS=y
++CONFIG_BOOTARGS="console=${console},${baudrate} root=/dev/mmcblk2p${rootpart} oops=panic panic=5 rw rootwait"
++CONFIG_BOOTCOMMAND="run bootcmd_mmc0"
  CONFIG_DEFAULT_FDT_FILE="imx7d-pico-pi.dtb"
  CONFIG_BOUNCE_BUFFER=y
- CONFIG_SPL_TEXT_BASE=0x00911000
-@@ -36,8 +40,10 @@ CONFIG_CMD_MMC=y
+ CONFIG_SPL_I2C_SUPPORT=y
+@@ -38,14 +42,17 @@ CONFIG_CMD_MMC=y
  CONFIG_CMD_USB=y
  CONFIG_CMD_USB_SDP=y
  CONFIG_CMD_USB_MASS_STORAGE=y
 -# CONFIG_CMD_SETEXPR is not set
--# CONFIG_CMD_MII is not set
-+CONFIG_CMD_SETEXPR=y
-+CONFIG_CMD_FS_GENERIC=y
-+CONFIG_BOOTCOUNT_LIMIT=y
-+CONFIG_BOOTCOUNT_ENV=y
+ # CONFIG_CMD_MII is not set
+ CONFIG_CMD_BMP=y
  CONFIG_CMD_CACHE=y
  CONFIG_CMD_EXT4_WRITE=y
  CONFIG_OF_CONTROL=y
+ CONFIG_DEFAULT_DEVICE_TREE="imx7d-pico-pi"
++CONFIG_SYS_REDUNDAND_ENVIRONMENT=y
++CONFIG_ENV_OFFSET_REDUND=0xE0000
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_BOOTCOUNT_LIMIT=y
++CONFIG_BOOTCOUNT_ENV=y
+ CONFIG_DFU_MMC=y
+ CONFIG_USB_FUNCTION_FASTBOOT=y
+ CONFIG_FASTBOOT_BUF_ADDR=0x82000000
 diff --git a/include/configs/pico-imx7d.h b/include/configs/pico-imx7d.h
-index 1f4023796a..03dd914a92 100644
+index 1d0df9dd44..6ea8735f45 100644
 --- a/include/configs/pico-imx7d.h
 +++ b/include/configs/pico-imx7d.h
-@@ -53,20 +53,6 @@
-		"rootfs part 0 1\0" \
-
- /* When booting with FIT specify the node entry containing boot.scr */
--#if defined(CONFIG_FIT)
--#define PICO_BOOT_ENV \
--	"bootscr_fitimage_name=bootscr\0" \
--	"bootscriptaddr=0x83200000\0" \
--	"fdtovaddr=0x83100000\0" \
--	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
--	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
--	"mmcargs=setenv bootargs console=${console},${baudrate} " \
--		"rootwait rw;\0" \
--	"loadbootscript=" \
--		"load mmc ${mmcdev}:${mmcpart} ${bootscriptaddr} ${script};\0" \
--	"bootscript=echo Running bootscript from mmc ...; " \
--	"source ${bootscriptaddr}:${bootscr_fitimage_name}\0"
--#else
- #define PICO_BOOT_ENV \
-	"bootmenu_0=Boot using PICO-Hobbit baseboard=" \
-		"setenv fdtfile imx7d-pico-hobbit.dtb\0" \
-@@ -77,7 +63,6 @@
-	"bootmenu_3=Boot using PICO-Pi baseboard=" \
-		"setenv fdtfile imx7d-pico-pi.dtb\0" \
-	BOOTENV
--#endif
-
-
- #define CONFIG_SYS_MMC_IMG_LOAD_PART	1
-@@ -119,22 +104,33 @@
- 		"name=rootfs,size=0,uuid=${uuid_gpt_rootfs}\0" \
- 	"fastboot_partition_alias_system=rootfs\0" \
- 	"setup_emmc=mmc dev 0; gpt write mmc 0 $partitions; reset;\0" \
--	PICO_BOOT_ENV
--
--#if defined(CONFIG_FIT)
--#define CONFIG_BOOTCOMMAND \
--	"mmc dev ${mmcdev};" \
--	"mmc dev ${mmcdev}; if mmc rescan; then " \
--		"if run loadbootscript; then " \
--			"iminfo ${bootscriptaddr};" \
--			"if test $? -eq 1; then hab_failsafe; fi;" \
--			"run bootscript; " \
--		"else " \
--			"echo Fail to load fitImage with boot script;" \
--			"hab_failsafe;" \
--		"fi; " \
--	"fi"
--#endif
-+	PICO_BOOT_ENV \
-+	SWUPDATE_ENV_SETTINGS
-+
+@@ -52,6 +52,31 @@
+ 		"/boot/imx7d-pico-pi.dtb ext4 0 1;" \
+ 		"rootfs part 0 1\0" \
+ 
 +#define SWUPDATE_ENV_SETTINGS \
 +	"bootlimit=1\0"	\
 +	"bootcount=0\0"	\
@@ -119,23 +78,20 @@ index 1f4023796a..03dd914a92 100644
 +	\
 +	"altbootcmd=run swu_altbootcmd; " \
 +	"run bootcmd_mmc0\0"
-
++
+ /* When booting with FIT specify the node entry containing boot.scr */
+ #if defined(CONFIG_FIT)
+ #define PICO_BOOT_ENV \
+@@ -110,7 +135,8 @@
+ 		"name=rootfs,size=0,uuid=${uuid_gpt_rootfs}\0" \
+ 	"fastboot_partition_alias_system=rootfs\0" \
+ 	"setup_emmc=mmc dev 0; gpt write mmc 0 $partitions; reset;\0" \
+-	PICO_BOOT_ENV
++	PICO_BOOT_ENV \
++	SWUPDATE_ENV_SETTINGS
+ 
  #define BOOT_TARGET_DEVICES(func) \
-	func(MMC, mmc, 0) \
-@@ -188,10 +184,10 @@
- #endif
- 
- /* FLASH and environment organization */
--#define CONFIG_ENV_SIZE			SZ_8K
-+#define CONFIG_ENV_SIZE			SZ_16K
- 
--/* Environment starts at 768k = 768 * 1024 = 786432 */
--#define CONFIG_ENV_OFFSET		786432
-+#define CONFIG_ENV_OFFSET		0xC0000
-+#define CONFIG_ENV_OFFSET_REDUND        0xE0000
- /*
-  * Detect overlap between U-Boot image and environment area in build-time
-  *
+ 	func(MMC, mmc, 0) \
 -- 
-2.17.1
+2.20.1
 
