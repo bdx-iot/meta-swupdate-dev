@@ -1,0 +1,11 @@
+#!/bin/sh
+
+_cur_mmcpart=$(fw_printenv rootpart | cut -d "=" -f 2)
+if [ "$_cur_mmcpart" -eq 5 ]; then
+    _partno=B
+else
+    _partno=A
+fi
+SWUPDATE_EXTRA_ARGS="-e stable,rootfs${_partno} -H stm32mp157a-dk1:revC-01 -f /etc/swupdate.cfg"
+SWUPDATE_ARGS="-v ${SWUPDATE_EXTRA_ARGS}"
+
