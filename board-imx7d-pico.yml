@@ -5,14 +5,8 @@ header:
 
 machine: imx7d-pico
 
-repos:
-  meta-qt5:
-    url: https://github.com/meta-qt5/meta-qt5
-    refspec: master
-
 local_conf_header:
   pico-imx7d: |
-    USE_VIDEO = "1"
     KERNEL_DEVICETREE_remove_imx7d-pico = "imx7d-pico-hobbit.dtb imx7d-pico-dwarf.dtb"
     UBOOT_CONFIG_remove_imx7d-pico = "hobbit generic nymph dwarf"
     BLK_DEVICE_imx7d-pico = "/dev/mmcblk2"
