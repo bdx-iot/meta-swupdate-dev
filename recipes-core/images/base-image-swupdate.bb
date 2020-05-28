@@ -51,11 +51,11 @@ IMAGE_INSTALL_append_imx7d-pico = "\
 
 # U-Boot initial env
 IMAGE_INSTALL_append_imx = "\
-	u-boot-fslc-initial-env \
+	u-boot-fslc-env \
 "
 
 IMAGE_INSTALL_append_stm32mp1 = "\
-	u-boot-initial-env \
+	u-boot-env \
 "
 
 IMAGE_BUILDINFO_VARS = " \

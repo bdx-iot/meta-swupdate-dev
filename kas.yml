@@ -54,7 +54,7 @@ local_conf_header:
     VIRTUAL-RUNTIME_initscripts = ""
     DISTRO_FEATURES_append = " systemd"
   swupdate: |
-    PREFERRED_VERSION_swupdate = "2019.11+git%"
+    PREFERRED_VERSION_swupdate = "2020.04+git%"
     IMAGE_FSTYPES_append = " ext4.gz"
     IMAGE_BOOT_FILES = "boot.scr"
   libubootenv: |

@@ -9,7 +9,6 @@ local_conf_header:
     UBOOT_ENTRYPOINT_imx = "0x80008000"
     FIT_ADDR_imx = "0x86000000"
     DEFAULTTUNE_imx = "cortexa7thf-neon"
-    KERNEL_MODULE_AUTOLOAD_imx += " brcmfmac"
-    KERNEL_MODULE_AUTOLOAD_imx += " g_ether"
+    KERNEL_MODULE_AUTOLOAD_imx += " brcmfmac g_ether"
     WKS_FILES_imx = "swu-imx.wks"
     EXTRA_IMAGEDEPENDS += "imx-usb-loader-native"
