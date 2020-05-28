@@ -55,7 +55,7 @@ IMAGE_INSTALL_append_imx = "\
 "
 
 IMAGE_INSTALL_append_stm32mp1 = "\
-	u-boot-initial-env \
+	u-boot-env \
 "
 
 IMAGE_BUILDINFO_VARS = " \
