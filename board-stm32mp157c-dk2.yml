@@ -3,4 +3,4 @@ header:
   includes:
     - stm32mp1-config.yml
 
-machine: stm32mp157a-dk1
+machine: stm32mp157c-dk2
