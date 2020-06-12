@@ -57,8 +57,6 @@ local_conf_header:
     PREFERRED_VERSION_swupdate = "2020.04+git%"
     IMAGE_FSTYPES_append = " ext4.gz"
     IMAGE_BOOT_FILES = "boot.scr"
-  libubootenv: |
-    PREFERRED_PROVIDER_u-boot-fw-utils = "libubootenv"
   kernel: |
     KERNEL_CLASSES += "kernel-fitimage"
     KERNEL_IMAGETYPES = "fitImage zImage"
