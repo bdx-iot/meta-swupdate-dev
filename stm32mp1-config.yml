@@ -1,0 +1,8 @@
+header:
+    version: 8
+
+local_conf_header:
+    stm32mp1: |
+        FIT_ADDR = "0xc5000000"
+        WKS_FILES = "swu-stm32mp1.wks"
+        BLK_DEVICE = "/dev/mmcblk0"
