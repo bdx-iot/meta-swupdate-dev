@@ -1,0 +1,118 @@
+From 320bc9a9aac69a7665ccaaccbce78e8c01de3789 Mon Sep 17 00:00:00 2001
+From: Joris Offouga <offougajoris@gmail.com>
+Date: Sat, 14 Jan 2023 00:42:07 +0000
+Subject: [PATCH 2/2] warp7: add support for warp7-ynov-board
+
+Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+---
+ arch/arm/dts/imx7s-warp-u-boot.dtsi | 43 +++++++++++++++++++++++++++++
+ board/warp7/warp7.c                 | 13 +++++++++
+ configs/warp7_defconfig             |  3 +-
+ 3 files changed, 58 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/dts/imx7s-warp-u-boot.dtsi b/arch/arm/dts/imx7s-warp-u-boot.dtsi
+index bc4b5745fc..8039666d8f 100644
+--- a/arch/arm/dts/imx7s-warp-u-boot.dtsi
++++ b/arch/arm/dts/imx7s-warp-u-boot.dtsi
+@@ -7,6 +7,19 @@
+     chosen {
+         stdout-path = &uart1;
+     };
++
++    leds {
++		u-boot,dm-pre-reloc;
++		compatible = "gpio-leds";
++		system {
++			u-boot,dm-pre-reloc;
++			label = "boot";
++			gpios = <&mcp23008 0 GPIO_ACTIVE_LOW>;
++			//linux,default-trigger = "heartbeat";
++			default-state = "on";
++			status = "okay";
++		};
++	};
+ };
+ 
+ &aips3 {
+@@ -24,3 +37,33 @@
+ &uart1 {
+ 	u-boot,dm-pre-reloc;
+ };
++
++&gpio7 {
++	u-boot,dm-pre-reloc;
++	rst_mikrobus {
++		gpio-hog;
++		gpios = <6 GPIO_ACTIVE_HIGH>;
++		output-high;
++	};
++};
++
++&i2c3 {
++	u-boot,dm-pre-reloc;
++	mcp23008: mcp23008@20 {
++			compatible = "microchip,mcp23008";
++			gpio-controller;
++			#gpio-cells = <2>;
++			reg = <0x20>;
++		};
++
++	rtc@6f {
++		compatible = "microchip,mcp7940x";
++		reg = <0x6f>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c08";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++};
+diff --git a/board/warp7/warp7.c b/board/warp7/warp7.c
+index ead52d5a49..86edb0706c 100644
+--- a/board/warp7/warp7.c
++++ b/board/warp7/warp7.c
+@@ -27,6 +27,19 @@
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
++int board_early_init_f(void)
++{
++	struct gpio_desc *desc;
++	int ret;
++
++	ret = gpio_hog_lookup_name("rst_mikrobus", &desc);
++	if (!ret)
++	{
++		dm_gpio_set_value(desc, 1);
++	}
++	return 0;
++}
++
+ int dram_init(void)
+ {
+ 	gd->ram_size = PHYS_SDRAM_SIZE;
+diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
+index ad5ce6ceb0..e6a3fdd6bc 100644
+--- a/configs/warp7_defconfig
++++ b/configs/warp7_defconfig
+@@ -23,7 +23,6 @@ CONFIG_FIT=y
+ CONFIG_FIT_VERBOSE=y
+ CONFIG_USE_BOOTCOMMAND=y
+ CONFIG_BOOTCOMMAND="mmc dev ${mmcdev}; if mmc rescan; then run do_bootscript_hab;if run loadbootscript; then run bootscript; else if run loadimage; then run mmcboot; fi; fi; fi"
+-# CONFIG_BOARD_EARLY_INIT_F is not set
+ CONFIG_HUSH_PARSER=y
+ CONFIG_SYS_MAXARGS=32
+ CONFIG_SYS_PBSIZE=532
+@@ -56,6 +55,8 @@ CONFIG_BOOTCOUNT_LIMIT=y
+ CONFIG_BOOTCOUNT_ENV=y
+ CONFIG_DFU_MMC=y
+ CONFIG_SYS_DFU_DATA_BUF_SIZE=0x1000000
++CONFIG_GPIO_HOG=y
++CONFIG_MCP230XX_GPIO=y
+ CONFIG_DM_I2C=y
+ CONFIG_SYS_I2C_MXC=y
+ CONFIG_SUPPORT_EMMC_BOOT=y
+-- 
+2.34.1
+

@@ -1,41 +1,41 @@
-From debd06f09ac26dba01d323aebdf676ecaaa6035d Mon Sep 17 00:00:00 2001
+From 6c7941273dd6ca21d818ba7ae5262195dff58c62 Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
-Date: Tue, 11 Feb 2020 21:13:40 +0100
+Date: Thu, 19 Jan 2023 21:16:05 +0000
 Subject: [PATCH] stm32mp1: add SWUpdate Requirements
 
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
- configs/stm32mp15_basic_defconfig |  2 ++
- include/configs/stm32mp1.h        | 26 ++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ configs/stm32mp15_basic_defconfig  |  2 ++
+ include/configs/stm32mp15_common.h | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
 diff --git a/configs/stm32mp15_basic_defconfig b/configs/stm32mp15_basic_defconfig
-index cdaa501349..d0cab0edf0 100644
+index 2cc26d4066..7211353f4b 100644
 --- a/configs/stm32mp15_basic_defconfig
 +++ b/configs/stm32mp15_basic_defconfig
-@@ -11,6 +11,7 @@ CONFIG_SPL_TEXT_BASE=0x2FFC2500
- CONFIG_DISTRO_DEFAULTS=y
+@@ -23,6 +23,7 @@ CONFIG_SYS_LOAD_ADDR=0xc2000000
  CONFIG_FIT=y
+ CONFIG_BOOTDELAY=1
  CONFIG_BOOTCOMMAND="run bootcmd_stm32mp"
 +CONFIG_PREBOOT="if env exists swu_setup; then echo 'Use default'; else env save; env save;fi"
+ CONFIG_SPL_LOG=y
+ CONFIG_BOARD_EARLY_INIT_F=y
  CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_USE_PARTITION=y
- CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_PARTITION=3
- CONFIG_SPL_I2C_SUPPORT=y
-@@ -59,6 +60,7 @@ CONFIG_ENV_OFFSET_REDUND=0x2C0000
- CONFIG_ENV_UBI_PART="UBI"
- CONFIG_ENV_UBI_VOLUME="uboot_config"
- CONFIG_ENV_UBI_VOLUME_REDUND="uboot_config_r"
+@@ -80,6 +81,7 @@ CONFIG_SYS_MMC_ENV_DEV=-1
+ # CONFIG_SPL_ENV_IS_NOWHERE is not set
+ # CONFIG_SPL_ENV_IS_IN_SPI_FLASH is not set
+ CONFIG_STM32_ADC=y
 +CONFIG_BOOTCOUNT_ENV=y
- CONFIG_SYS_RELOC_GD_ENV_ADDR=y
- CONFIG_DFU_MMC=y
- CONFIG_DFU_RAM=y
-diff --git a/include/configs/stm32mp1.h b/include/configs/stm32mp1.h
-index c302d72af8..777dcfc20f 100644
---- a/include/configs/stm32mp1.h
-+++ b/include/configs/stm32mp1.h
-@@ -182,6 +182,31 @@
- #define STM32MP_DFU_ALT_INFO
- #endif
+ CONFIG_SET_DFU_ALT_INFO=y
+ CONFIG_USB_FUNCTION_FASTBOOT=y
+ CONFIG_FASTBOOT_BUF_ADDR=0xC0000000
+diff --git a/include/configs/stm32mp15_common.h b/include/configs/stm32mp15_common.h
+index dab679f71e..50bb7ef2d9 100644
+--- a/include/configs/stm32mp15_common.h
++++ b/include/configs/stm32mp15_common.h
+@@ -168,13 +168,39 @@
+ 	"fdtoverlay_addr_r=" __FDTOVERLAY_ADDR_R "\0" \
+ 	"ramdisk_addr_r=" __RAMDISK_ADDR_R "\0"
  
 +#define SWUPDATE_ENV_SETTINGS \
 +	"bootlimit=1\0"	\
@@ -62,17 +62,18 @@ index c302d72af8..777dcfc20f 100644
 +	"altbootcmd=run swu_altbootcmd; " \
 +	"run bootcmd_mmc0\0"
 +
- /*
-  * memory layout for 32M uncompressed/compressed kernel,
-  * 1M fdt, 1M script, 1M pxe and 1M for splashimage
-@@ -206,6 +231,7 @@
- 	STM32MP_DFU_ALT_RAM \
- 	STM32MP_DFU_ALT_INFO \
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	STM32MP_MEM_LAYOUT \
+ 	STM32MP_BOOTCMD \
+ 	STM32MP_PARTS_DEFAULT \
  	BOOTENV \
-+	SWUPDATE_ENV_SETTINGS \
- 	"boot_net_usb_start=true\0"
+ 	STM32MP_EXTRA \
+-	STM32MP_BOARD_EXTRA_ENV
++	STM32MP_BOARD_EXTRA_ENV \
++	SWUPDATE_ENV_SETTINGS
  
  #endif /* ifndef CONFIG_SPL_BUILD */
+ #endif /* ifdef CONFIG_DISTRO_DEFAULTS*/
 -- 
-2.20.1
+2.34.1
 

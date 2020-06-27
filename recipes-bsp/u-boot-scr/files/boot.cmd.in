@@ -6,5 +6,6 @@ else
 fi
 
 run swu_setup
-load mmc 0:${rootpart} @@FIT_ADDR@@ /boot/fitImage
-bootm @@FIT_ADDR@@
+load mmc 0:${rootpart} ${fdt_addr} /boot/imx7s-warp.dtb
+load mmc 0:${rootpart} ${loadaddr} /boot/zImage
+bootz ${loadaddr} - ${fdt_addr}

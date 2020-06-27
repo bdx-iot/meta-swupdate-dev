@@ -2,8 +2,8 @@ part fsbl1 --source rawcopy --sourceparams="file=u-boot-spl.stm32" --ondisk mmcb
 part fsbl2 --source rawcopy --sourceparams="file=u-boot-spl.stm32" --ondisk mmcblk --align 1 --size 256k --part-name fsbl2
 part u-boot --source rawcopy --sourceparams="file=u-boot.img" --ondisk mmcblk --align 1 --size 2M --part-name uboot
 part /boot --source bootimg-partition --ondisk mmcblk --fstype=vfat --label boot --active --align 1 --size 20
-part / --source rootfs --ondisk mmcblk --fstype=ext4 --label rootfs_A  --align 1 --extra-space 200
-part / --source rootfs --ondisk mmcblk --fstype=ext4 --label rootfs_B  --align 1 --extra-space 200
-part /data --ondisk mmcblk --fstype=ext4 --label data --size 128M --align 1 --extra-space 0
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label rootfs_A  --align 1 --extra-space 200 --exclude-path=data/
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label rootfs_B  --align 1 --extra-space 200 --exclude-path=data/
+part /data --source rootfs --rootfs-dir=${IMAGE_ROOTFS}/data --ondisk mmcblk --fstype=ext4 --label data --size 128M --align 8192 --extra-space 0
 
 bootloader --ptable gpt

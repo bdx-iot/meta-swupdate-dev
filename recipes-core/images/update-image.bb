@@ -15,4 +15,4 @@ IMAGE_DEPENDS = "base-image-swupdate"
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "base-image-swupdate"
 
-SWUPDATE_IMAGES_FSTYPES[base-image-swupdate] = ".ext4.gz"
+SWUPDATE_IMAGES_FSTYPES[base-image-swupdate] = ".ext4.zst"

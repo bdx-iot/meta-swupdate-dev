@@ -1,6 +1,6 @@
 software =
 {
-	version = "1.0.0";
+	version = "@@SWUDATE_DEV_VERSION@@";
 
 	warp7 = {
 		hardware-compatibility: [ "rev0.2"];
@@ -8,12 +8,12 @@ software =
 			rootfsA : {
 				images: (
 					{
-						filename = "base-image-swupdate-imx7s-warp.ext4.gz";
+						filename = "base-image-swupdate-imx7s-warp.ext4.zst";
 						type = "raw";
-						sha256 = "@base-image-swupdate-imx7s-warp.ext4.gz";
+						sha256 = "$swupdate_get_sha256(base-image-swupdate-imx7s-warp.ext4.zst)";
 						installed-directly = true;
-						compressed = "zlib";
-						device = "/dev/mmcblk1p2";
+						compressed = "zstd";
+						device = "@@SWUPDATE_FIRST_ROOTPART@@";
 					}
 				);
 					uboot: (
@@ -35,12 +35,12 @@ software =
 			rootfsB : {
 				images: (
 					{
-						filename = "base-image-swupdate-imx7s-warp.ext4.gz";
+						filename = "base-image-swupdate-imx7s-warp.ext4.zst";
 						type = "raw";
-						sha256 = "@base-image-swupdate-imx7s-warp.ext4.gz";
+						sha256 = "$swupdate_get_sha256(base-image-swupdate-imx7s-warp.ext4.zst)";
 						installed-directly = true;
-						compressed = "zlib";
-						device = "/dev/mmcblk1p3";
+						compressed = "zstd";
+						device = "@@SWUPDATE_SECOND_ROOTPART@@";
 					}
 				);
 					uboot: (

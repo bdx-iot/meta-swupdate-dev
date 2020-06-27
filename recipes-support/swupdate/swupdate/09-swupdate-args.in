@@ -1,0 +1,12 @@
+#!/bin/sh
+rootfs=`swupdate -g`
+
+if [ $rootfs == '@@SWUPDATE_FIRST_ROOTPART@@' ]; then
+    _partno=B
+else
+    _partno=A
+fi
+
+SWUPDATE_EXTRA_ARGS="-e stable,rootfs${_partno} -H @@SWUPDATE_DEVICE_NAME@@:@@SWUPDATE_DEVICE_HARDWARE_REV@@ -f /data/swupdate.cfg"
+SWUPDATE_ARGS="-v ${SWUPDATE_EXTRA_ARGS}"
+SWUPDATE_SURICATTA_ARGS="-e"

@@ -1,11 +1,12 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_append_imx7d-pico = " \
+SRC_URI:append:imx7d-pico = " \
 	file://0001-pico-imx7d-add-SWUpdate-Requirements.patch \
 "
 
-SRC_URI_append_imx7s-warp = " \
+SRC_URI:append:imx7s-warp = " \
 	file://0001-warp7-add-SWUpdate-requirements.patch \
+	file://0002-warp7-add-support-for-warp7-ynov-board.patch \
 "
 
-DEPENDS_append += " u-boot-scr"
+DEPENDS:append = " u-boot-scr"

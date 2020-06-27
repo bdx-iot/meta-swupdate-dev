@@ -1,57 +1,52 @@
-From 4f85f41b0a62ac4e8e92447e2ca10011f097e9d8 Mon Sep 17 00:00:00 2001
+From 5aa286018d61bd2683096c76543ea7b898e5a44d Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
-Date: Sun, 15 Mar 2020 20:31:20 +0000
-Subject: [PATCH] warp7: add SWUpdate requirements
+Date: Thu, 12 Jan 2023 22:45:06 +0000
+Subject: [PATCH 1/2] warp7: add SWUpdate requirements
 
 Signed-off-by: Pierre-Jean Texier <pjtexier@koncepto.io>
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
- configs/warp7_defconfig |  7 +++++++
+ configs/warp7_defconfig |  5 +++++
  include/configs/warp7.h | 26 ++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+ 2 files changed, 31 insertions(+)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index d31ca28fff..671af42c9f 100644
+index d0b4e747dd..ad5ce6ceb0 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
-@@ -13,12 +13,14 @@ CONFIG_IMX_HAB=y
- CONFIG_FIT=y
- CONFIG_FIT_VERBOSE=y
- CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/warp7/imximage.cfg"
-+CONFIG_USE_PREBOOT=y
- CONFIG_BOUNCE_BUFFER=y
- CONFIG_HUSH_PARSER=y
- # CONFIG_CMD_BOOTD is not set
- CONFIG_CMD_BOOTZ=y
- # CONFIG_CMD_IMI is not set
- # CONFIG_CMD_XIMG is not set
-+CONFIG_CMD_ENV_FLAGS=y
- CONFIG_CMD_MEMTEST=y
- CONFIG_CMD_DFU=y
- CONFIG_CMD_GPIO=y
-@@ -35,8 +37,13 @@ CONFIG_CMD_FAT=y
+@@ -8,6 +8,8 @@ CONFIG_DM_GPIO=y
+ CONFIG_DEFAULT_DEVICE_TREE="imx7s-warp"
+ CONFIG_OPTEE_TZDRAM_SIZE=0x3000000
+ CONFIG_TARGET_WARP7=y
++CONFIG_BOOTCOUNT_BOOTLIMIT=1
++CONFIG_ENV_OFFSET_REDUND=0xE0000
+ CONFIG_ARMV7_BOOT_SEC_DEFAULT=y
+ # CONFIG_ARMV7_VIRT is not set
+ CONFIG_IMX_RDC=y
+@@ -45,10 +47,13 @@ CONFIG_CMD_FAT=y
  CONFIG_CMD_FS_GENERIC=y
  CONFIG_OF_CONTROL=y
- CONFIG_DEFAULT_DEVICE_TREE="imx7s-warp"
+ CONFIG_ENV_OVERWRITE=y
 +CONFIG_SYS_REDUNDAND_ENVIRONMENT=y
-+CONFIG_ENV_OFFSET_REDUND=0xE0000
  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG=y
  CONFIG_NET_RANDOM_ETHADDR=y
+ CONFIG_BOUNCE_BUFFER=y
 +CONFIG_BOOTCOUNT_LIMIT=y
 +CONFIG_BOOTCOUNT_ENV=y
-+CONFIG_BOOTCOUNT_BOOTLIMIT=1
  CONFIG_DFU_MMC=y
- CONFIG_DM_GPIO=y
+ CONFIG_SYS_DFU_DATA_BUF_SIZE=0x1000000
  CONFIG_DM_I2C=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index da894ec0ca..2e0810c42e 100644
+index 7e9b25b07b..60670b22c8 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
-@@ -27,6 +27,30 @@
+@@ -19,6 +19,31 @@
  #define CONFIG_DFU_ENV_SETTINGS \
  	"dfu_alt_info=boot raw 0x2 0x1000 mmcpart 1\0" \
  
 +#define SWU_ENV_SETTINGS \
++	"rootpart=2\0"  \
 +	"bootlimit=1\0"	\
 +	"bootcount=0\0"	\
 +	"upgrade_available=0\0"	\
@@ -78,15 +73,14 @@ index da894ec0ca..2e0810c42e 100644
  /* When booting with FIT specify the node entry containing boot.scr */
  #if defined(CONFIG_FIT)
  #define BOOT_SCR_STRING "source ${bootscriptaddr}:${bootscr_fitimage_name}\0"
-@@ -40,6 +64,8 @@
+@@ -28,6 +53,7 @@
  
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	CONFIG_DFU_ENV_SETTINGS \
 +	SWU_ENV_SETTINGS \
-+	"rootpart=2\0"     \
  	"script=boot.scr\0" \
  	"bootscr_fitimage_name=bootscr\0" \
  	"script_signed=boot.scr.imx-signed\0" \
 -- 
-2.20.1
+2.34.1
 

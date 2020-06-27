@@ -1,14 +1,22 @@
 header:
-  version: 8
+    version: 8
+    includes:
+        - kas.yml
 
 local_conf_header:
   wifi: |
-    DISTRO_FEATURES_append = " wifi"
+    DISTRO_FEATURES:append = " wifi"
   nxp-specific: |
     ACCEPT_FSL_EULA = "1"
     UBOOT_ENTRYPOINT = "0x80008000"
     FIT_ADDR = "0x86000000"
     DEFAULTTUNE = "cortexa7thf-neon"
-    KERNEL_MODULE_AUTOLOAD_append = " brcmfmac g_ether"
-    WKS_FILES = "swu-imx.wks"
-    EXTRA_IMAGEDEPENDS_append = " imx-usb-loader-native"
+    KERNEL_MODULE_AUTOLOAD:append = " brcmfmac g_ether"
+    WKS_FILES = "swu-imx.wks.in"
+    EXTRA_IMAGEDEPENDS:append = " imx-usb-loader-native"
+    BLK_DEVICE = "/dev/mmcblk2"
+    UBOOT_STORAGE_DEVICE = "${BLK_DEVICE}"
+    SWUPDATE_FIRST_ROOTPART = "${BLK_DEVICE}p2"
+    SWUPDATE_SECOND_ROOTPART = "${BLK_DEVICE}p3"
+    UBOOT_ENV_ADDR = "0xC0000"
+    UBOOT_ENV_ADDR_REDUND = "0xE0000"

@@ -2,4 +2,9 @@
 Name=usb0
 
 [Network]
-Address=192.168.20.2/24
+Address=192.168.20.3/24
+DHCPServer=true
+
+[DHCPServer]
+PoolOffset=128
+PoolSize=32

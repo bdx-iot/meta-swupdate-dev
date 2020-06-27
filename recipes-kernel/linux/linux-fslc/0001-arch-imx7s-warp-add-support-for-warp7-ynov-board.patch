@@ -1,0 +1,131 @@
+From 59f8e646d6b202a4a5aec4835c18217b61262896 Mon Sep 17 00:00:00 2001
+From: Joris Offouga <offougajoris@gmail.com>
+Date: Sat, 14 Jan 2023 00:37:16 +0000
+Subject: [PATCH] arch: imx7s-warp: add support for warp7-ynov board
+
+Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+---
+ arch/arm/boot/dts/imx7s-warp.dts | 86 ++++++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index e8734d218b9d..26b3c002b32d 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -18,6 +18,30 @@ memory@80000000 {
+ 		reg = <0x80000000 0x20000000>;
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++		system {
++			label = "boot";
++			gpios = <&mcp23008 1 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++			default-state = "on";
++		};
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++    /* fixed crystal dedicated to mpc251x */
++		clk8m: clk@1 {
++			compatible = "fixed-clock";
++			reg=<1>;
++			#clock-cells = <0>;
++			clock-frequency = <8000000>;
++			clock-output-names = "clk8m";
++		};
++	};
++
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 		pinctrl-0 = <&pinctrl_gpio>;
+@@ -220,6 +244,34 @@ &i2c3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
++
++	mcp23008: mcp23008@20 {
++		compatible = "microchip,mcp23008";
++		gpio-controller;
++		#gpio-cells = <2>;
++		reg = <0x20>;
++	};
++
++	rtc@6f {
++		compatible = "microchip,mcp7940x";
++		reg = <0x6f>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c08";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++
++	lm75a@4b {
++		compatible = "national,lm75a";
++		reg = <0x4b>;
++	};
++
++	pcf8591@48 {
++		compatible = "nxp,pcf8591";
++		reg = <0x48>;
++	};
+ };
+ 
+ &i2c4 {
+@@ -246,6 +298,25 @@ mpl3115@60 {
+ 	};
+ };
+ 
++&ecspi2 {
++	fsl,spi-num-chipselects = <2>;
++	cs-gpios = <&gpio4 23 GPIO_ACTIVE_LOW>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi2>;
++	status = "okay";
++
++	can: can@0 {
++		compatible = "microchip,mcp2515";
++		pinctrl-names = "can";
++		pinctrl-0 = <&pinctrl_can_int>;
++		clocks = <&clk8m>;
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		interrupt-parent = <&gpio7>;
++		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
++	};
++};
++
+ &mipi_csi {
+ 	clock-frequency = <166000000>;
+ 	status = "okay";
+@@ -340,6 +411,21 @@ &wdog1 {
+ };
+ 
+ &iomuxc {
++	pinctrl_ecspi2: ecspi2grp {
++		fsl,pins = <
++		MX7D_PAD_ECSPI2_MISO__ECSPI2_MISO          0x00000014
++		MX7D_PAD_ECSPI2_MOSI__ECSPI2_MOSI          0x00000014
++		MX7D_PAD_ECSPI2_SCLK__ECSPI2_SCLK          0x00000014
++		MX7D_PAD_ECSPI2_SS0__ECSPI2_SS0            0x00000014
++		>;
++	};
++
++	pinctrl_can_int: cangrp {
++      fsl,pins = <
++        MX7D_PAD_ENET1_RGMII_TD1__GPIO7_IO7 0x14 /* INT */
++      >;
++    };
++
+ 	pinctrl_brcm_reg: brcmreggrp {
+ 		fsl,pins = <
+ 			MX7D_PAD_SD2_WP__GPIO5_IO10	0x14 /* WL_REG_ON */
+-- 
+2.34.1
+

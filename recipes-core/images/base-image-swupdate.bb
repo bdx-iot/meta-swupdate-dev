@@ -4,12 +4,12 @@ SUMMARY = "Base Image Swupdate  (Test)"
 
 inherit image-buildinfo
 
-IMAGE_FEATURES_append = " \
+IMAGE_FEATURES:append = " \
 	ssh-server-dropbear \
 "
 
 # Misc
-IMAGE_INSTALL_append = " \
+IMAGE_INSTALL:append = " \
 	openssh-sftp-server \
 	iptables \
 	curl \
@@ -26,17 +26,17 @@ IMAGE_INSTALL_append = " \
 "
 
 # SWUpdate
-IMAGE_INSTALL_append = " \
+IMAGE_INSTALL:append = " \
 	lua \
 	librsync \
 	swupdate \
 	swupdate-www \
-	swupdate-tools \
+	swupdate-tools-ipc \
 	libubootenv-bin \
 "
 
 # Kernel
-IMAGE_INSTALL_append = " \
+IMAGE_INSTALL:append = " \
 	kernel-image \
 	kernel-devicetree \
 	kernel-modules \
@@ -44,17 +44,17 @@ IMAGE_INSTALL_append = " \
 	packagegroup-base \
 "
 
-IMAGE_INSTALL_append_imx7d-pico = "\
+IMAGE_INSTALL:append:imx7d-pico = "\
 	dnsmasq \
 	hostapd \
 "
 
 # U-Boot initial env
-IMAGE_INSTALL_append_imx = "\
+IMAGE_INSTALL:append:imx = "\
 	u-boot-fslc-env \
 "
 
-IMAGE_INSTALL_append_stm32mp1 = "\
+IMAGE_INSTALL:append:stm32mp1 = "\
 	u-boot-env \
 "
 
