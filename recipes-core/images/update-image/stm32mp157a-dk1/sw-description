@@ -12,7 +12,7 @@ software =
 						type = "raw";
 						sha256 = "@base-image-swupdate-stm32mp157a-dk1.ext4.gz";
 						installed-directly = true;
-						compressed = true;
+						compressed = "zlib";
 						device = "/dev/mmcblk0p5";
 					}
 				);
@@ -39,7 +39,7 @@ software =
 						type = "raw";
 						sha256 = "@base-image-swupdate-stm32mp157a-dk1.ext4.gz";
 						installed-directly = true;
-						compressed = true;
+						compressed = "zlib";
 						device = "/dev/mmcblk0p6";
 					}
 				);
