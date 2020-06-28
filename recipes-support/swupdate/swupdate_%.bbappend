@@ -13,3 +13,6 @@ do_install_append() {
 
     install -m 755 ${WORKDIR}/09-swupdate-args ${D}${libdir}/swupdate/conf.d/
 }
+
+# We don't want to run this service
+SYSTEMD_AUTO_ENABLE_${PN}-progress = "disable"
