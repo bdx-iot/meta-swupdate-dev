@@ -2,7 +2,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 PACKAGECONFIG_CONFARGS = ""
 
-SRC_URI += " \
+SRC_URI_append = " \
      file://swupdate.cfg \
      file://09-swupdate-args \
 "
