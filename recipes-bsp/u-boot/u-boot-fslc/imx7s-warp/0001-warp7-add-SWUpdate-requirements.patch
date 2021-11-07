@@ -1,20 +1,21 @@
-From 4f85f41b0a62ac4e8e92447e2ca10011f097e9d8 Mon Sep 17 00:00:00 2001
+From 3d0a4b890647e13ea49f34bb4098f5f6cd84dbc1 Mon Sep 17 00:00:00 2001
 From: Joris Offouga <offougajoris@gmail.com>
 Date: Sun, 15 Mar 2020 20:31:20 +0000
 Subject: [PATCH] warp7: add SWUpdate requirements
 
 Signed-off-by: Pierre-Jean Texier <pjtexier@koncepto.io>
 Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+
 ---
  configs/warp7_defconfig |  7 +++++++
  include/configs/warp7.h | 26 ++++++++++++++++++++++++++
  2 files changed, 33 insertions(+)
 
 diff --git a/configs/warp7_defconfig b/configs/warp7_defconfig
-index d31ca28fff..671af42c9f 100644
+index a5fb48ff1f..47aa574c92 100644
 --- a/configs/warp7_defconfig
 +++ b/configs/warp7_defconfig
-@@ -13,12 +13,14 @@ CONFIG_IMX_HAB=y
+@@ -14,12 +14,14 @@ CONFIG_IMX_HAB=y
  CONFIG_FIT=y
  CONFIG_FIT_VERBOSE=y
  CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/warp7/imximage.cfg"
@@ -29,7 +30,7 @@ index d31ca28fff..671af42c9f 100644
  CONFIG_CMD_MEMTEST=y
  CONFIG_CMD_DFU=y
  CONFIG_CMD_GPIO=y
-@@ -35,8 +37,13 @@ CONFIG_CMD_FAT=y
+@@ -36,8 +38,13 @@ CONFIG_CMD_FAT=y
  CONFIG_CMD_FS_GENERIC=y
  CONFIG_OF_CONTROL=y
  CONFIG_DEFAULT_DEVICE_TREE="imx7s-warp"
@@ -41,10 +42,10 @@ index d31ca28fff..671af42c9f 100644
 +CONFIG_BOOTCOUNT_ENV=y
 +CONFIG_BOOTCOUNT_BOOTLIMIT=1
  CONFIG_DFU_MMC=y
- CONFIG_DM_GPIO=y
  CONFIG_DM_I2C=y
+ CONFIG_DM_MMC=y
 diff --git a/include/configs/warp7.h b/include/configs/warp7.h
-index da894ec0ca..2e0810c42e 100644
+index 39c00480bd..1be4d31799 100644
 --- a/include/configs/warp7.h
 +++ b/include/configs/warp7.h
 @@ -27,6 +27,30 @@
@@ -87,6 +88,3 @@ index da894ec0ca..2e0810c42e 100644
  	"script=boot.scr\0" \
  	"bootscr_fitimage_name=bootscr\0" \
  	"script_signed=boot.scr.imx-signed\0" \
--- 
-2.20.1
-
