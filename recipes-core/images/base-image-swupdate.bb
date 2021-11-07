@@ -45,7 +45,6 @@ IMAGE_INSTALL_append = " \
 "
 
 IMAGE_INSTALL_append_imx7d-pico = "\
-	dnsmasq \
 	hostapd \
 "
 
