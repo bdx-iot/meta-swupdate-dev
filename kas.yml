@@ -10,7 +10,7 @@ repos:
 
   poky:
     url: https://git.yoctoproject.org/git/poky
-    refspec: master
+    refspec: 0810ac6b926cd901f0619e95f367efc79d4c3159
     layers:
       meta:
       meta-poky:
@@ -18,15 +18,15 @@ repos:
 
   meta-freescale:
     url: https://github.com/Freescale/meta-freescale
-    refspec: master
+    refspec: 727fd8df20c8ee58474ce15cd5e1459f14bee977
 
   meta-freescale-3rdparty:
     url: https://github.com/Freescale/meta-freescale-3rdparty
-    refspec: master
+    refspec: 537cb85e4db17d1f6b356a92112b32ae2e39b235
 
   meta-openembedded:
     url: http://git.openembedded.org/meta-openembedded
-    refspec: master
+    refspec: 814eec96c2a29172da57a425a3609f8b6fcc6afe
     layers:
       meta-oe:
       meta-python:
@@ -34,11 +34,11 @@ repos:
 
   meta-swupdate:
     url: https://github.com/sbabic/meta-swupdate
-    refspec: master
+    refspec: 89cf0872eacd5efe0ad06a707b4df4095d62986e
 
   meta-stm32mp1:
-    url: https://github.com/bdx-iot/meta-stm32mp1
-    refspec: master
+    path: /home/jun/yocto/master/meta-stm32mp1
+    refspec: dunfell
 
 bblayers_conf_header:
   standard: |
@@ -54,7 +54,7 @@ local_conf_header:
     VIRTUAL-RUNTIME_initscripts = ""
     DISTRO_FEATURES_append = " systemd"
   swupdate: |
-    PREFERRED_VERSION_swupdate = "2020.04+git%"
+    PREFERRED_VERSION_swupdate = "2021.04+git%"
     IMAGE_FSTYPES_append = " ext4.gz"
     IMAGE_BOOT_FILES = "boot.scr"
   kernel: |
