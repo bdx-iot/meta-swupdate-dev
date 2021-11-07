@@ -37,8 +37,8 @@ repos:
     refspec: 89cf0872eacd5efe0ad06a707b4df4095d62986e
 
   meta-stm32mp1:
-    path: /home/jun/yocto/master/meta-stm32mp1
-    refspec: dunfell
+    url: https://github.com/bdx-iot/meta-stm32mp1
+    refspec: c006a90d125784ff1f1abc2829d778e24f0a6c06
 
 bblayers_conf_header:
   standard: |
