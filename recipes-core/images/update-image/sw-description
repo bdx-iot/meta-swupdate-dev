@@ -2,18 +2,18 @@ software =
 {
 	version = "@@SWUDATE_DEV_VERSION@@";
 
-	warp7 = {
-		hardware-compatibility: [ "rev0.2"];
+	@@SWUPDATE_HARDWARE_COMPATIBILITY@@ = {
+		hardware-compatibility: [ "rev1.0"];
 		stable : {
 			rootfsA : {
 				images: (
 					{
-						filename = "base-image-swupdate-imx7s-warp.ext4.zst";
+						filename = "base-image-swupdate-@@MACHINE@@.ext4.zst";
 						type = "raw";
-						sha256 = "$swupdate_get_sha256(base-image-swupdate-imx7s-warp.ext4.zst)";
+						sha256 = "$swupdate_get_sha256(base-image-swupdate-@@MACHINE@@.ext4.zst)";
 						installed-directly = true;
 						compressed = "zstd";
-						device = "@@SWUPDATE_FIRST_ROOTPART@@";
+						device = "@@SWUPDATE_ROOTFS_A@@";
 					}
 				);
 					uboot: (
@@ -27,7 +27,7 @@ software =
 					},
 					{
 						name = "rootpart";
-						value = "2";
+						value = "@@SWUPDATE_ROOTPART_A@@";
 					}
 				);
 
@@ -35,12 +35,12 @@ software =
 			rootfsB : {
 				images: (
 					{
-						filename = "base-image-swupdate-imx7s-warp.ext4.zst";
+						filename = "base-image-swupdate-@@MACHINE@@.ext4.zst";
 						type = "raw";
-						sha256 = "$swupdate_get_sha256(base-image-swupdate-imx7s-warp.ext4.zst)";
+						sha256 = "$swupdate_get_sha256(base-image-swupdate-@@MACHINE@@.ext4.zst)";
 						installed-directly = true;
 						compressed = "zstd";
-						device = "@@SWUPDATE_SECOND_ROOTPART@@";
+						device = "@@SWUPDATE_ROOTFS_B@@";
 					}
 				);
 					uboot: (
@@ -54,7 +54,7 @@ software =
 					},
 					{
 						name = "rootpart";
-						value = "3";
+						value = "@@SWUPDATE_ROOTPART_B@@";
 					}
 				);
 			};

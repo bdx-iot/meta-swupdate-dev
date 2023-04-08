@@ -3,10 +3,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI:append = " \
 	file://fw_env.config.in \
 "
-UBOOT_STORAGE_DEVICE ??= "/dev/mmcblk0"
-UBOOT_ENV_ADDR ??= ""
-UBOOT_ENV_ADDR_REDUND ??= ""
-UBOOT_ENV_SIZE ??= "0x2000"
 
 do_install:append() {
 	install -d ${D}${sysconfdir}

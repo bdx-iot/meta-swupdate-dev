@@ -54,7 +54,6 @@ globals :
 	verbose = true;
 	loglevel = 5;
 	syslog = true;
-	no-downgrading = "1.0.0";
 };
 
 # logcolors : set colors for output to stdout / stderr
@@ -116,7 +115,7 @@ download :
 # any entry is a copule of <key, vealue>. For example, MAC address, serial number,
 # and so on.
 identify : (
-	{ name = "@@SWUPDATE_DEVICE_NAME@@"; value = "@@SWUPDATE_DEVICE_HARDWARE_REV@@"; }
+	{ name = "@@SWUPDATE_HARDWARE_COMPATIBILITY@@"; value = "@@SWUPDATE_HARWARE_REVISION@@"; }
 );
 
 #
@@ -179,7 +178,7 @@ identify : (
 suricatta :
 {
 	tenant		= "@@SWUPDATE_HAWKBIT_TENANT@@";
-	id		= "@@SWUPDATE_HAWKBIT_ID@@";
+	id			= "@@SWUPDATE_HAWKBIT_ID@@";
 	url 		= "@@SWUPDATE_HAWKBIT_SERVER@@";
 	polldelay	= 20;
 	nocheckcert	= true;

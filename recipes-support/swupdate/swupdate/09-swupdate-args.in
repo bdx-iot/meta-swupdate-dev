@@ -1,12 +1,23 @@
 #!/bin/sh
+
 rootfs=`swupdate -g`
 
-if [ $rootfs == '@@SWUPDATE_FIRST_ROOTPART@@' ]; then
+# Valide upgrade
+if [ "$(fw_printenv -n upgrade_available)" -eq 1 ]; then
+   fw_setenv upgrade_available 0
+   # Valide surricata update
+    if [ "$(fw_printenv -n ustate)" -eq 1 ]; then
+        SWUPDATE_SURICATTA_ARGS="-e -c 2"
+    else
+        SWUPDATE_SURICATTA_ARGS="-e"
+    fi
+fi
+
+if [ $rootfs == '@@SWUPDATE_ROOTFS_A@@' ]; then
     _partno=B
 else
     _partno=A
 fi
 
-SWUPDATE_EXTRA_ARGS="-e stable,rootfs${_partno} -H @@SWUPDATE_DEVICE_NAME@@:@@SWUPDATE_DEVICE_HARDWARE_REV@@ -f /data/swupdate.cfg"
+SWUPDATE_EXTRA_ARGS="-e stable,rootfs${_partno} -H @@SWUPDATE_HARDWARE_COMPATIBILITY@@:@@SWUPDATE_HARWARE_REVISION@@ -f /data/swupdate.cfg"
 SWUPDATE_ARGS="-v ${SWUPDATE_EXTRA_ARGS}"
-SWUPDATE_SURICATTA_ARGS="-e"

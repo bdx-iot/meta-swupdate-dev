@@ -1,0 +1,27 @@
+header:
+  version: 8
+  includes:
+    - kas.yml
+
+machine: imx8mp-debix
+
+local_conf_header:
+  imx8mp-debix: |
+    UBOOT_FITIMAGE_ADDR = "0x50000000"
+    WKS_FILES = "swu-imx8.wks.in"
+    BLK_DEVICE = "/dev/mmcblk0"
+    UBOOT_STORAGE_DEVICE = "${BLK_DEVICE}"
+    UBOOT_ENV_ADDR = "0x400000"
+    UBOOT_ENV_ADDR_REDUND = "0x404000"
+    UBOOT_ENV_SIZE = "0x4000"
+    SWUPDATE_STORAGE_DEVICE = "${BLK_DEVICE}"
+    SWUPDATE_ROOTPART_A = "2"
+    SWUPDATE_ROOTPART_B = "3"
+    SWUPDATE_ROOTFS_A = "${SWUPDATE_STORAGE_DEVICE}p${SWUPDATE_ROOTPART_A}"
+    SWUPDATE_ROOTFS_B = "${SWUPDATE_STORAGE_DEVICE}p${SWUPDATE_ROOTPART_B}"
+    ACCEPT_FSL_EULA = "1"
+    DISTRO_FEATURES:append = " opengl"
+    DISTRO_FEATURES:remove = " x11"
+    IMAGE_FEATURES:append = " splash"
+    IMAGE_INSTALL:append = " psplash"
+    UBOOT_EXTLINUX = "0"

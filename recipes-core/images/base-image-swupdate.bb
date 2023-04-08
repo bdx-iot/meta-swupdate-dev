@@ -78,4 +78,5 @@ ${@get_layer_revs(d)}
 END
 }	
 
-export IMAGE_BASENAME = "base-image-swupdate"
+export IMAGE_BASENAME = "base-image-swupdate-${MACHINE}"
+export IMAGE_LINK_NAME = "${IMAGE_BASENAME}"
