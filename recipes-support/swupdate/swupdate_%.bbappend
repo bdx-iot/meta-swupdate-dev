@@ -1,9 +1,25 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
+SRC_URI = "git://github.com/bdx-iot/swupdate.git;protocol=https;branch=topic/libubootenv_new_format \
+    file://defconfig \
+    file://swupdate \
+    file://swupdate.sh \
+    file://swupdate.service \
+    file://swupdate.socket.tmpl \
+    file://swupdate-usb.rules \
+    file://swupdate-usb@.service \
+    file://swupdate-progress.service \
+    file://tmpfiles-swupdate.conf \
+    file://10-mongoose-args \
+    file://90-start-progress \
+"
+
 SRC_URI:append = " \
      file://swupdate.cfg.in \
      file://09-swupdate-args.in \
 "
+
+SRCREV = "8e76337494c6aff0e9de6dc27f994fedc72d78fa"
 
 do_install:append() {
     install -d ${D}/data
@@ -15,6 +31,6 @@ do_install:append() {
     install -m 755 ${WORKDIR}/09-swupdate-args ${D}${libdir}/swupdate/conf.d/
 }
 
-# We don't want to run this service
-SYSTEMD_AUTO_ENABLE:${PN}-progress = "disable"
+# We don't want to run this service if IMAGE_FEATURES doesn't contains splash
+SYSTEMD_AUTO_ENABLE:${PN}-progress = "${@bb.utils.contains('IMAGE_FEATURES', 'splash', 'enable', 'disable', d)}"
 FILES:${PN}:append = " /data/swupdate.cfg"
