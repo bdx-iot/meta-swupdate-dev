@@ -10,6 +10,7 @@ imx7s-warp
 imx7d-pico
 stm32mp157a-dk1
 stm32mp157c-dk2
+imx8mp-debix
 ```
 
 Build

@@ -1,0 +1,5 @@
+header:
+  version: 8
+
+target: base-image-swupdate
+task: populate_sdk

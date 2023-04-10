@@ -25,3 +25,4 @@ local_conf_header:
     IMAGE_FEATURES:append = " splash"
     IMAGE_INSTALL:append = " psplash"
     UBOOT_EXTLINUX = "0"
+    KERNEL_MODULE_AUTOLOAD:append = " g_ether"

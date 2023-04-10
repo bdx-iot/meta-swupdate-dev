@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/LGPL-2.1-or-later.txt;md5=4fbd65380cdd255951
 
 SRC_URI:append = " \
 	file://fw_env.config.in \
+	file://libubootenv-Add-compatibility-with-older-version.patch \
 "
 
 SRCREV = "91d06f201e2213afeee7f01f466d5f1e98208e94"

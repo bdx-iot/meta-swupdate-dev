@@ -19,7 +19,7 @@ SRC_URI:append = " \
      file://09-swupdate-args.in \
 "
 
-SRCREV = "8e76337494c6aff0e9de6dc27f994fedc72d78fa"
+SRCREV = "4af844f3b059fe341ed909afb517fac7cdde09c5"
 
 do_install:append() {
     install -d ${D}/data
