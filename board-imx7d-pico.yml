@@ -9,5 +9,3 @@ local_conf_header:
   pico-imx7d: |
     KERNEL_DEVICETREE:remove = "imx7d-pico-hobbit.dtb imx7d-pico-dwarf.dtb"
     UBOOT_CONFIG:remove = "hobbit generic nymph dwarf"
-    SWUPDATE_DEVICE_NAME = "pico-imx7d"
-    SWUPDATE_DEVICE_HARDWARE_REV = "rev1.2"

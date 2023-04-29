@@ -1,3 +1,8 @@
-# Block device name	Device offset	Env. size
-@@UBOOT_STORAGE_DEVICE@@ @@UBOOT_ENV_ADDR@@ @@UBOOT_ENV_SIZE@@
-@@UBOOT_STORAGE_DEVICE@@ @@UBOOT_ENV_ADDR_REDUND@@ @@UBOOT_ENV_SIZE@@
+uboot:
+  size : @@UBOOT_ENV_SIZE@@
+  lockfile : /var/lock/fw_printenv.lock
+  devices:
+    - path : @@UBOOT_STORAGE_DEVICE@@
+      offset : @@UBOOT_ENV_ADDR@@
+    - path : @@UBOOT_STORAGE_DEVICE@@
+      offset : @@UBOOT_ENV_ADDR_REDUND@@

@@ -1,0 +1,346 @@
+From patchwork Mon Apr 10 10:00:18 2023
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Stefano Babic <sbabic@denx.de>
+X-Patchwork-Id: 1767132
+Return-Path: <swupdate+bncBCXPLOXJ6IKRBOV4Z6QQMGQEGFTOMOI@googlegroups.com>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@legolas.ozlabs.org
+Authentication-Results: legolas.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=googlegroups.com
+ (client-ip=2a00:1450:4864:20::339; helo=mail-wm1-x339.google.com;
+ envelope-from=swupdate+bncbcxploxj6ikrbov4z6qqmgqegftomoi@googlegroups.com;
+ receiver=<UNKNOWN>)
+Authentication-Results: legolas.ozlabs.org;
+	dkim=pass (2048-bit key;
+ unprotected) header.d=googlegroups.com header.i=@googlegroups.com
+ header.a=rsa-sha256 header.s=20221208 header.b=AbH3VKjO;
+	dkim-atps=neutral
+Received: from mail-wm1-x339.google.com (mail-wm1-x339.google.com
+ [IPv6:2a00:1450:4864:20::339])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(No client certificate requested)
+	by legolas.ozlabs.org (Postfix) with ESMTPS id 4Pw4Gn03Pyz1yXv
+	for <incoming@patchwork.ozlabs.org>; Mon, 10 Apr 2023 20:00:31 +1000 (AEST)
+Received: by mail-wm1-x339.google.com with SMTP id
+ n36-20020a05600c502400b003ee93fac4a9sf3523869wmr.2
+        for <incoming@patchwork.ozlabs.org>;
+ Mon, 10 Apr 2023 03:00:31 -0700 (PDT)
+ARC-Seal: i=2; a=rsa-sha256; t=1681120827; cv=pass;
+        d=google.com; s=arc-20160816;
+        b=ZAgmISIBv5k4Z+MsHsyeahbGMmWQrnoc6KlsrMFP5tKntWCPh2gB3fo1PQeuNZ9sAC
+         BgmIYPnz2Peu1PFNx/ikB7eLZpjrCxQtxLAg08sGsaKBh+RGOoNuUva4bSZBLg9mRPpC
+         UW1cScB6RDTURc7tq/k890FaQq2fOHhBXjFXtQHb5E/+IagSWKGKZ/1Ux6Au4Zw+svV+
+         x+ryS5Z/PAUDw8WOKNiVA4vYCgZkST4anCv7+eeNCdROLcTUpXHSOBZxReRRMmDcLyYa
+         sI2lpFhp0u8W7gosUJ4R2/DTuNzNwMSfe2vPNzoLT94qQ/K/A7Ys9IfmycCi4YStqF8u
+         HEuA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20160816;
+        h=list-unsubscribe:list-subscribe:list-archive:list-help:list-post
+         :list-id:mailing-list:precedence:mime-version:message-id:date
+         :subject:cc:to:from:sender:dkim-signature;
+        bh=uzyWIyM48xRPiXDiFoTMUOq1llxgemzmwQfZa3cF1CE=;
+        b=z1zHiPhJ2jjnJ3AdZqaCdW0srj2b+WVi6mGFwfVCxRWJFzU8oteW1T1g7ONRfGHW6n
+         ISy4tlxZHzEY9FkjPGmxukaz6MiZm4qKgQyPjzLE92qldPT/fNd+Kb8/cZ0dElxgDESS
+         V3gzgYn62k33HPFc89JGJu04lPWeDoAv/5vlBEZpaJ305MpHqiQx+/aGYcjkJ084AGEe
+         IfTNup5lxfBhUKqlopR86BeE7T0whF7f8X5n82eE5sU024bMPbYYysp6oxJk71j9zUY/
+         7c4/VAsIDiVF2GOIcKBAgTI08S6QeDPLrO5vqu8+GZk2t46pNFY/1TC1nxImhTgo5YOV
+         tLAg==
+ARC-Authentication-Results: i=2; gmr-mx.google.com;
+       spf=neutral (google.com: 212.18.0.9 is neither permitted nor denied by
+ domain of sbabic@denx.de) smtp.mailfrom=sbabic@denx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlegroups.com; s=20221208; t=1681120827;
+        h=list-unsubscribe:list-subscribe:list-archive:list-help:list-post
+         :list-id:mailing-list:precedence:x-original-authentication-results
+         :x-original-sender:mime-version:message-id:date:subject:cc:to:from
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=uzyWIyM48xRPiXDiFoTMUOq1llxgemzmwQfZa3cF1CE=;
+        b=AbH3VKjOE8t98io8KbwZPdUcOWmAEwldhb66WhOYGMtQtNs7rZ/6Yte+Ct7KfFpa0L
+         A5O5OXUWImGlqnXNl2puDpTxkzDdOiCugocMe3eeNh44y6TE5dmkFmWBXiGhcxcdp/HG
+         Z8WFbUSaLgTsXghN+vDcJ2rymtnrSbGtCxJsrce2B903bdo33tmUK/1Gtsa/tSEdyLOw
+         y328MPw8N2NZJWaOrSTg39O7nOC/AT0Dd8RAa25qfB89vSI7RSLyWDTSyuvRGPPe2b2E
+         K4i4UEv++226bdHeqKhvpNGQ/Hmi+a328ZTlwDHqtUXqGOi5+MQxlrzMjwxoNaVgZPJn
+         Ampw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681120827;
+        h=list-unsubscribe:list-subscribe:list-archive:list-help:list-post
+         :x-spam-checked-in-group:list-id:mailing-list:precedence
+         :x-original-authentication-results:x-original-sender:mime-version
+         :message-id:date:subject:cc:to:from:x-beenthere:x-gm-message-state
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=uzyWIyM48xRPiXDiFoTMUOq1llxgemzmwQfZa3cF1CE=;
+        b=y1uYqUxO21mi81ampUXMfGNbxySIqkllyQd6X/M+RGBAqlDr5RtyBCL55hkJxc+T5F
+         MK2bbss3h49176jR19/W3TSskTKRbwAp1VMUvCl8R3UbnpmJ8F9wqc7o039kQb5WnIkX
+         mgUKncQpLqvMeFJhKcB8uzkFj6xsqnouyQOtHLHrjaZg3eHFQOW7hDAFJDB/PZ1+vq8S
+         uCwEcOF4TWViVpsn2ue53tfUd0uynBWpzjiP0AcSRWDnIC4m6kg1IMiB7J4Yjli6kOhI
+         /TesTsfYFTJ17Lpbo8S8FXO+afa35Kf2jmtv7I9fX5rSHqNveqpv620IVZ/iKF5CB+8K
+         fhWg==
+Sender: swupdate@googlegroups.com
+X-Gm-Message-State: AAQBX9eAmotxsMcqs9a5cOcAXwgPb1h4APBv+RFckiwJJKQbNV0eZEwp
+	QBBQDJAxSZzbwoFZ897UGxE=
+X-Google-Smtp-Source: 
+ AKy350aDKp53dGhg0pwPnfJ0l/SvZD9xhxey5PfPHqNNcF3h9LOQi1QDhrqdsO3rGl1Vek1maG229w==
+X-Received: by 2002:a05:600c:2119:b0:3ed:39b2:7c3c with SMTP id
+ u25-20020a05600c211900b003ed39b27c3cmr1398907wml.6.1681120826788;
+        Mon, 10 Apr 2023 03:00:26 -0700 (PDT)
+X-BeenThere: swupdate@googlegroups.com
+Received: by 2002:a5d:5c13:0:b0:2f1:8553:1d3 with SMTP id
+ cc19-20020a5d5c13000000b002f1855301d3ls3272022wrb.0.-pod-prod-gmail;
+ Mon, 10 Apr 2023 03:00:25 -0700 (PDT)
+X-Received: by 2002:adf:f5c3:0:b0:2ce:a93d:41a7 with SMTP id
+ k3-20020adff5c3000000b002cea93d41a7mr6210808wrp.40.1681120825291;
+        Mon, 10 Apr 2023 03:00:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1681120825; cv=none;
+        d=google.com; s=arc-20160816;
+        b=t5iL7Ym/H+zEEL5txTAT+GReIHgZGVTGdxaHwvBX2+Et7eZaX1dHXVAm5sMAfzciYU
+         uvcNzzfRxvDZ6YKyboGkhq0UNpT8riBuzlwGeq83d2GCHRy7lFxQB0lmGknOYECvavFe
+         7x+5TR4a6a8f/BR1ymvsZ/kz2FV3WQWkgx9MoNbz2MubKzxkiQwwCfBFzzHmovHxC+UM
+         E/JZ4vjISJ7XeX5lJdbvZHnmIniVvR0l+xCK2GIGMTvVfHlBl8EnVNMnu0XUrPgZQjlq
+         s6kHJdu1Lau6d5UIx61nSw5ZBr0s7J3NzgRMmLXa9MPCN4B2y9Yi8hwQQgQ3SPGe09wR
+         pD+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com;
+ s=arc-20160816;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from;
+        bh=ibc84m4fBsOUeIRDKoFnST3EJ1fXe40Ou5d+i4BDRN8=;
+        b=QNosR1gDgaqoe36xzm4ZKoGVMrXsQhlOqQIxhyM/g3WD0ffHVJnzj12OmlU6HAJ4sc
+         bvKWWCEpdjvyAdU/PH+bkmaaNmLvgBdGv0OHeOJ/7Pc5EuMYyvBROcNGV8LegfwOm0GK
+         GJGDBhVw1z2IVt5l9k37AdTJRaGiqKcyj2mt1f9LM/CAP+1nldyyJeTnB/SlbMuheN/r
+         fzTBXnYVdZE3zskLRZojTVpA0X1uRubtGQ5shPjnd2xJ7aFU+Mld2tQl1I44/A73bv/G
+         npHbGcEtG1zMoOzeFwHG5LLt4G6HXcjeZp61Bn2mQJgB5H7tIm86wZTik3JBQND37/Hy
+         JaCg==
+ARC-Authentication-Results: i=1; gmr-mx.google.com;
+       spf=neutral (google.com: 212.18.0.9 is neither permitted nor denied by
+ domain of sbabic@denx.de) smtp.mailfrom=sbabic@denx.de
+Received: from mail-out.m-online.net (mail-out.m-online.net. [212.18.0.9])
+        by gmr-mx.google.com with ESMTPS id
+ e7-20020a5d6d07000000b002ec0293a208si446955wrq.6.2023.04.10.03.00.25
+        for <swupdate@googlegroups.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Apr 2023 03:00:25 -0700 (PDT)
+Received-SPF: neutral (google.com: 212.18.0.9 is neither permitted nor denied
+ by domain of sbabic@denx.de) client-ip=212.18.0.9;
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4Pw4Gc6c4Pz1r5hW;
+	Mon, 10 Apr 2023 12:00:24 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+	by mail.m-online.net (Postfix) with ESMTP id 4Pw4Gc6M51z1qqlS;
+	Mon, 10 Apr 2023 12:00:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
+ port 10024)
+	with ESMTP id M-O48tKZQ7bA; Mon, 10 Apr 2023 12:00:23 +0200 (CEST)
+Received: from babic.homelinux.org (host-88-217-136-221.customer.m-online.net
+ [88.217.136.221])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPS;
+	Mon, 10 Apr 2023 12:00:23 +0200 (CEST)
+Received: from localhost (mail.babic.homelinux.org [127.0.0.1])
+	by babic.homelinux.org (Postfix) with ESMTP id E6D414540DC6;
+	Mon, 10 Apr 2023 12:00:22 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at babic.homelinux.org
+Received: from babic.homelinux.org ([IPv6:::1])
+	by localhost (mail.babic.homelinux.org [IPv6:::1]) (amavisd-new, port 10024)
+	with ESMTP id oh6G75PvaMCP; Mon, 10 Apr 2023 12:00:20 +0200 (CEST)
+Received: from paperino.fritz.box (paperino.fritz.box [192.168.178.48])
+	by babic.homelinux.org (Postfix) with ESMTP id 764EF4540430;
+	Mon, 10 Apr 2023 12:00:20 +0200 (CEST)
+From: Stefano Babic <sbabic@denx.de>
+To: swupdate@googlegroups.com
+Cc: Stefano Babic <sbabic@denx.de>
+Subject: [swupdate] [libubootenv][PATCH] Add compatibility with older version
+Date: Mon, 10 Apr 2023 12:00:18 +0200
+Message-Id: <20230410100018.15426-1-sbabic@denx.de>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Original-Sender: sbabic@denx.de
+X-Original-Authentication-Results: gmr-mx.google.com;       spf=neutral
+ (google.com: 212.18.0.9 is neither permitted nor denied by domain of
+ sbabic@denx.de) smtp.mailfrom=sbabic@denx.de
+Precedence: list
+Mailing-list: list swupdate@googlegroups.com;
+ contact swupdate+owners@googlegroups.com
+List-ID: <swupdate.googlegroups.com>
+X-Spam-Checked-In-Group: swupdate@googlegroups.com
+X-Google-Group-Id: 605343134186
+List-Post: <https://groups.google.com/group/swupdate/post>,
+ <mailto:swupdate@googlegroups.com>
+List-Help: <https://groups.google.com/support/>,
+ <mailto:swupdate+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/swupdate
+List-Subscribe: <https://groups.google.com/group/swupdate/subscribe>,
+ <mailto:swupdate+subscribe@googlegroups.com>
+List-Unsubscribe: 
+ <mailto:googlegroups-manage+605343134186+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/swupdate/subscribe>
+
+Make transition to new API simpler. Older application can still call
+libuboot_read_config() as in the past. This function requires to have a
+valid context as input.
+
+Newer applications just call libuboot_read_config_ext(struct uboot_env
+**ctx). It gets the pointer to an array of ctx. Allocation is done by
+the libuboot_read_config_ext(9 function.
+
+Old API:
+
+	// Allocate ctx
+	struct uboot_env *ctx;
+	libuboot_initialize(&ctx);
+	libuboot_read_config(ctx, configfile);
+
+New API:
+	struct uboot_env *ctx;
+	libuboot_read_config_ext(&ctx, configfile);
+
+Signed-off-by: Stefano Babic <sbabic@denx.de>
+---
+ src/fw_printenv.c | 25 +++++++++----------------
+ src/libuboot.h    | 10 +++++-----
+ src/uboot_env.c   | 41 ++++++++++++++++++++++-------------------
+ 3 files changed, 36 insertions(+), 40 deletions(-)
+
+diff --git a/src/fw_printenv.c b/src/fw_printenv.c
+index 1d9a35e..e062624 100644
+--- a/src/fw_printenv.c
++++ b/src/fw_printenv.c
+@@ -142,23 +142,16 @@ int main (int argc, char **argv) {
+ 	/*
+ 	 * Try first new format, fallback to legacy
+ 	 */
+-	ret = libuboot_read_multiple_config(&ctx, cfgfname);
++	ret = libuboot_read_config_ext(&ctx, cfgfname);
+ 	if (ret) {
+-		if (libuboot_initialize(&ctx, NULL) < 0) {
+-			fprintf(stderr, "Cannot initialize environment\n");
+-			exit(1);
+-			}
+-		if ((ret = libuboot_read_config(ctx, cfgfname)) < 0) {
+-			fprintf(stderr, "Configuration file wrong or corrupted\n");
+-			exit (ret);
+-		}
+-	} else {
+-		if (namespace)
+-			ctx = libuboot_get_namespace(ctx, namespace);
+-		if (!ctx) {
+-			fprintf(stderr, "Namespace %s not found\n", namespace);
+-			exit (1);
+-		}
++		fprintf(stderr, "Cannot initialize environment\n");
++		exit(1);
++	}
++	if (namespace)
++		ctx = libuboot_get_namespace(ctx, namespace);
++	if (!ctx) {
++		fprintf(stderr, "Namespace %s not found\n", namespace);
++		exit (1);
+ 	}
+ 
+ 	if (!defenvfile)
+diff --git a/src/libuboot.h b/src/libuboot.h
+index f7a5fb9..a99a1ab 100644
+--- a/src/libuboot.h
++++ b/src/libuboot.h
+@@ -43,15 +43,15 @@ struct uboot_env_device {
+  */
+ int libuboot_read_config(struct uboot_ctx *ctx, const char *config);
+ 
+-/** @brief Read multiple environment configuration from a file
++/** @brief Read U-Boot environment configuration from a file - new API
+  *
+- * @param[in] ctx libuboot context
+- * @param[in] config path to the configuration file in yaml format
++ * @param[in] pointer to array of ctx libuboot context
++ * @param[in] config path to the configuration file
+  * @return 0 in case of success, else negative value
+  */
+-int libuboot_read_multiple_config(struct uboot_ctx **ctxlist, const char *config);
++int libuboot_read_config_ext(struct uboot_ctx **ctx, const char *config);
+ 
+-/** @brief Get ctx from list
++/** @brief Get ctx from list - this is maintained for compatibility
+  *
+  * @param[in] ctxlist libuboot context array
+  * @param[in] name name identifier for the single ctx
+diff --git a/src/uboot_env.c b/src/uboot_env.c
+index 4120c5c..593058f 100644
+--- a/src/uboot_env.c
++++ b/src/uboot_env.c
+@@ -1553,25 +1553,7 @@ int libuboot_load_file(struct uboot_ctx *ctx, const char *filename)
+ 	return 0;
+ }
+ 
+-int libuboot_read_multiple_config(struct uboot_ctx **ctxlist, const char *config)
+-{
+-	FILE *fp;
+-	int ret;
+-
+-	if (!config)
+-		return -EINVAL;
+-
+-	fp = fopen(config, "r");
+-	if (!fp)
+-		return -EBADF;
+-
+-	ret = parse_yaml_config(ctxlist, fp);
+-	fclose(fp);
+-
+-	return (ret > 0) ? -1 : ret;
+-}
+-
+-int libuboot_read_config(struct uboot_ctx *ctx, const char *config)
++int libuboot_read_config_ext(struct uboot_ctx **ctxlist, const char *config)
+ {
+ 	FILE *fp;
+ 	char *line = NULL;
+@@ -1581,6 +1563,7 @@ int libuboot_read_config(struct uboot_ctx *ctx, const char *config)
+ 	struct uboot_flash_env *dev;
+ 	char *tmp;
+ 	int retval = 0;
++	struct uboot_ctx *ctx;
+ 
+ 	if (!config)
+ 		return -EINVAL;
+@@ -1589,8 +1572,23 @@ int libuboot_read_config(struct uboot_ctx *ctx, const char *config)
+ 	if (!fp)
+ 		return -EBADF;
+ 
++	if (!*ctxlist) {
++		ret = parse_yaml_config(ctxlist, fp);
++		if (!ret) {
++			fclose(fp);
++			return 0;
++		}
++		ret = libuboot_initialize(ctxlist, NULL);
++		if (ret) {
++			fclose(fp);
++			return ret;
++		}
++	}
++	ctx = *ctxlist;
++
+ 	dev = ctx->envdevs;
+ 	ctx->size = 0;
++	rewind(fp);
+ 
+ 	while (getline(&line, &bufsize, fp) != -1) {
+ 		/* skip comments */
+@@ -1655,6 +1653,11 @@ int libuboot_read_config(struct uboot_ctx *ctx, const char *config)
+ 	return retval;
+ }
+ 
++int libuboot_read_config(struct uboot_ctx *ctx, const char *config)
++{
++	return libuboot_read_config_ext(&ctx, config);
++}
++
+ static bool libuboot_validate_flags(struct var_entry *entry, const char *value)
+ {
+ 	bool ok_type = true, ok_access = true;

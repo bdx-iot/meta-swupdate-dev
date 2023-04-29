@@ -5,7 +5,7 @@ SUMMARY = "Base Image Swupdate  (Test)"
 inherit image-buildinfo
 
 IMAGE_FEATURES:append = " \
-	ssh-server-dropbear \
+	ssh-server-openssh \
 "
 
 # Misc
@@ -32,6 +32,7 @@ IMAGE_INSTALL:append = " \
 	swupdate \
 	swupdate-www \
 	swupdate-tools-ipc \
+	${@bb.utils.contains('IMAGE_FEATURES', 'splash', 'swupdate-progress', '', d)} \
 	libubootenv-bin \
 "
 
@@ -58,6 +59,10 @@ IMAGE_INSTALL:append:stm32mp1 = "\
 	u-boot-env \
 "
 
+IMAGE_INSTALL:append:mx8-nxp-bsp = "\
+	u-boot-imx-env \
+"
+
 IMAGE_BUILDINFO_VARS = " \
     BB_VERSION \
     BUILD_SYS  \
@@ -78,4 +83,5 @@ ${@get_layer_revs(d)}
 END
 }	
 
-export IMAGE_BASENAME = "base-image-swupdate"
+export IMAGE_BASENAME = "base-image-swupdate-${MACHINE}"
+export IMAGE_LINK_NAME = "${IMAGE_BASENAME}"

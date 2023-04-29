@@ -1,11 +1,10 @@
 if env exists console
 then 
-	setenv bootargs 'console=${console},${baudrate} root=@@BLK_DEVICE@@p'${rootpart}' oops=panic panic=5 rootwait rw'
+	setenv bootargs 'console=${console},${baudrate} root=@@SWUPDATE_STORAGE_DEVICE@@p'${rootpart}' oops=panic panic=5 rootwait rw'
 else 
-	setenv bootargs 'root=@@BLK_DEVICE@@p'${rootpart}' oops=panic panic=5 rootwait rw'
+	setenv bootargs 'root=@@SWUPDATE_STORAGE_DEVICE@@p'${rootpart}' oops=panic panic=5 rootwait rw'
 fi
 
 run swu_setup
-load mmc 0:${rootpart} ${fdt_addr} /boot/imx7s-warp.dtb
-load mmc 0:${rootpart} ${loadaddr} /boot/zImage
-bootz ${loadaddr} - ${fdt_addr}
+load mmc ${devnum}:${rootpart} @@UBOOT_FITIMAGE_ADDR@@ /boot/fitImage
+bootm @@UBOOT_FITIMAGE_ADDR@@

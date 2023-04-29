@@ -37,6 +37,9 @@ repos:
   meta-stm32mp1:
     url: https://github.com/bdx-iot/meta-stm32mp1
 
+  meta-imx8mp-debix:
+    url: https://github.com/bdx-iot/meta-imx8mp-debix
+
 bblayers_conf_header:
   standard: |
     POKY_BBLAYERS_CONF_VERSION = "2"
@@ -45,19 +48,6 @@ bblayers_conf_header:
 local_conf_header:
   reduce_diskspace: |
     INHERIT += "rm_work_and_downloads"
-  systemd: |
-    VIRTUAL-RUNTIME_init_manager = "systemd"
-    DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
-    VIRTUAL-RUNTIME_initscripts = ""
-    DISTRO_FEATURES:append = " systemd"
-  swupdate: |
-    IMAGE_TYPES:append = " ext4.xz ext4.zst"
-    IMAGE_FSTYPES:append = " ext4.gz ext4.xz ext4.zst"
-    IMAGE_BOOT_FILES = "boot.scr"
-  kernel: |
-    KERNEL_CLASSES:append = "kernel-fitimage"
-    KERNEL_IMAGETYPES = "fitImage zImage"
-    SWUDATE_DEV_VERSION = "1.0.0"
   standard: |
     CONF_VERSION = "2"
     PACKAGE_CLASSES = "package_rpm"

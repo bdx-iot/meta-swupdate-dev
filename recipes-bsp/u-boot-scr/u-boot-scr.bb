@@ -8,9 +8,15 @@ SRC_URI = "file://boot.cmd.in"
 
 inherit deploy
 
+ARCH:arm ?= "arm"
+ARCH:aarch64 ?= "arm64"
+
+BOOT_CMD:arm ?= "bootz"
+BOOT_CMD:aarch64 ?= "booti"
+
 do_compile() {
-	sed -e 's|@@BLK_DEVICE@@|${BLK_DEVICE}|' -e 's|@@FIT_ADDR@@|${FIT_ADDR}|' "${WORKDIR}/boot.cmd.in" > "${WORKDIR}/boot.cmd"
-	mkimage -C none -A arm -T script -d "${WORKDIR}/boot.cmd" boot.scr
+	sed -e 's|@@SWUPDATE_STORAGE_DEVICE@@|${SWUPDATE_STORAGE_DEVICE}|' -e 's|@@BOOT_CMD@@|${BOOT_CMD}|'  -e 's|@@UBOOT_FITIMAGE_ADDR@@|${UBOOT_FITIMAGE_ADDR}|' "${WORKDIR}/boot.cmd.in" > "${WORKDIR}/boot.cmd"
+	mkimage -C none -A ${ARCH} -T script -d "${WORKDIR}/boot.cmd" boot.scr
 }
 
 do_deploy() {

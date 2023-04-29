@@ -5,7 +5,3 @@ header:
 
 machine: imx7s-warp
 
-local_conf_header:
-  imx7s-warp: |
-    SWUPDATE_DEVICE_NAME = "warp7"
-    SWUPDATE_DEVICE_HARDWARE_REV = "rev0.2"

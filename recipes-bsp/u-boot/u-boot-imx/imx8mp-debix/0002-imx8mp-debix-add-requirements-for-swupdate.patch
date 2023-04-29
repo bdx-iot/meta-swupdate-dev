@@ -1,0 +1,90 @@
+From 2bafa189a85990aa3488311d1b82fd2b2c2c6f80 Mon Sep 17 00:00:00 2001
+From: Joris Offouga <offougajoris@gmail.com>
+Date: Thu, 6 Apr 2023 22:52:19 +0200
+Subject: [PATCH 2/2] imx8mp-debix: add requirements for swupdate
+
+Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+---
+ configs/imx8mp_debix_defconfig |  6 +++++-
+ include/configs/imx8mp_debix.h | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/configs/imx8mp_debix_defconfig b/configs/imx8mp_debix_defconfig
+index 3add6898e2..f2cc6e9af4 100644
+--- a/configs/imx8mp_debix_defconfig
++++ b/configs/imx8mp_debix_defconfig
+@@ -17,6 +17,7 @@ CONFIG_SPL_TEXT_BASE=0x920000
+ CONFIG_TARGET_DEBIX_IMX8MP=y
+ CONFIG_SPL_SERIAL=y
+ CONFIG_SPL_DRIVERS_MISC=y
++CONFIG_BOOTCOUNT_BOOTLIMIT=1
+ CONFIG_SPL=y
+ CONFIG_ENV_OFFSET_REDUND=0x404000
+ CONFIG_SPL_IMX_ROMAPI_LOADADDR=0x48000000
+@@ -33,7 +34,8 @@ CONFIG_LEGACY_IMAGE_FORMAT=y
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_OF_SYSTEM_SETUP=y
+ CONFIG_BOOTARGS_SUBST=y
+-CONFIG_BOOTCOMMAND="run distro_bootcmd;run bsp_bootcmd"
++CONFIG_USE_PREBOOT=y
++CONFIG_PREBOOT="env exists product || env default -f -a && env set product i.MX8MP && env set image Image && env save && env save"
+ CONFIG_DEFAULT_FDT_FILE="imx8mp-debix-evk.dtb"
+ CONFIG_BOARD_EARLY_INIT_F=y
+ CONFIG_BOARD_LATE_INIT=y
+@@ -81,6 +83,8 @@ CONFIG_NET_RANDOM_ETHADDR=y
+ CONFIG_SPL_DM=y
+ CONFIG_REGMAP=y
+ CONFIG_SYSCON=y
++CONFIG_BOOTCOUNT_LIMIT=y
++CONFIG_BOOTCOUNT_ENV=y
+ CONFIG_SPL_CLK_COMPOSITE_CCF=y
+ CONFIG_CLK_COMPOSITE_CCF=y
+ CONFIG_SPL_CLK_IMX8MP=y
+diff --git a/include/configs/imx8mp_debix.h b/include/configs/imx8mp_debix.h
+index ab5a62a3e4..5e66389288 100644
+--- a/include/configs/imx8mp_debix.h
++++ b/include/configs/imx8mp_debix.h
+@@ -60,9 +60,40 @@
+ 			   "else run jh_netboot; fi; \0" \
+ 	"jh_netboot=setenv fdtfile ${jh_root_dtb}; setenv jh_clk clk_ignore_unused mem=1920MB; run netboot; \0 "
+ 
++#define SWU_ENV_SETTINGS \
++	"rootpart=2\0" \
++	"bootlimit=1\0"	\
++	"bootcount=0\0"	\
++	"upgrade_available=0\0"	\
++	\
++	"swu_setup="                                                     \
++	"setenv expand_bootargs \"setenv bootargs \\\\\"${bootargs}\\\\\"\"; " \
++	"run expand_bootargs; " \
++	"setenv expand_bootargs;\0" \
++	\
++	"swu_altbootcmd="	\
++	"if test ${rootpart} = 2; then " \
++	"echo Bountcount limit reached. Reverting to B; " \
++	"setenv rootpart 3; "	\
++	"else "	\
++	"echo Bountcount limit reached. Reverting to A; " \
++	"setenv rootpart 2; "	\
++	"fi; " \
++	"setenv upgrade_available 0; " \
++	"saveenv\0" \
++	\
++	"swu_try_to_recover="   \
++	"if test ${upgrade_available} = 1; " \
++	"then reset; " \
++	"fi\0" \
++	\
++	"altbootcmd=run swu_altbootcmd; " \
++	"run bootcmd\0"
++
+ #define CONFIG_EXTRA_ENV_SETTINGS		\
+ 	CONFIG_MFG_ENV_SETTINGS_DEFAULT \
+ 	JAILHOUSE_ENV \
++	SWU_ENV_SETTINGS \
+ 	"console=ttymxc1\0" \
+ 	"fdt_high=0xffffffff\0" \
+ 	"initrd_high=0xffffffff\0" \
+-- 
+2.34.1
+
