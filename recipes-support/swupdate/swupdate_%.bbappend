@@ -1,25 +1,12 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI = "git://github.com/bdx-iot/swupdate.git;protocol=https;branch=topic/libubootenv_new_format \
-    file://defconfig \
-    file://swupdate \
-    file://swupdate.sh \
-    file://swupdate.service \
-    file://swupdate.socket.tmpl \
-    file://swupdate-usb.rules \
-    file://swupdate-usb@.service \
-    file://swupdate-progress.service \
-    file://tmpfiles-swupdate.conf \
-    file://10-mongoose-args \
-    file://90-start-progress \
-"
-
+SRCBRANCH = "master"
 SRC_URI:append = " \
      file://swupdate.cfg.in \
      file://09-swupdate-args.in \
 "
 
-SRCREV = "4af844f3b059fe341ed909afb517fac7cdde09c5"
+SRCREV = "909195ef70eb93419c1487d6eb8036571b8027c5"
 
 do_install:append() {
     install -d ${D}/data

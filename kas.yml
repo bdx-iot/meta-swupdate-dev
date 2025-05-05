@@ -6,7 +6,7 @@ target:
   - update-image
 defaults:
   repos:
-    refspec: kirkstone
+    branch: kirkstone
 
 repos:
   meta-swupdate-dev:
